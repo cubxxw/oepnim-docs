@@ -1,4 +1,5 @@
 ---
+sidebar_position: 2
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,11 +10,8 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-创建@消息
-
-:::
-
-:::caution 注意
+创建@消息，目前一条消息中最多支持@ 10人。如果要@所有人，则增加一个userID为AtAllTag的at元素即可。    
+同时，如果在@ 人的同时要引用消息，则需要将引用的消息作为参数传入，不再需要调用`createQuoteMessage`。
 
 :::
 
@@ -24,7 +22,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -106,6 +106,40 @@ OIMMessageInfo *message = [OIMMessageInfo createTextAtMessage:@"" atUidList:@[] 
 
 ```
 
+### 函数原型
+
+```swift showLineNumbers
+
++ (OIMMessageInfo *)createTextAtAllMessage:(NSString *)text
+                               displayText:(NSString * _Nullable)displayText
+                                   message:(OIMMessageInfo * _Nullable)message;
+
+```
+
+### 输入参数
+
+| 参数名称    | 参数类型                                                  | 是否必填 | 描述       |
+| ----------- | --------------------------------------------------------- | -------- | ---------- |
+| text        | NSString                                                  | 是       | 内容       |
+| displayText | NSString                                                  | 否       | 展示的文本 |
+| msg         | [OIMMessageInfo](docs/sdks/class/message/messageInfo.mdx) | 否       | 引用的消息 |
+
+### 返回结果
+
+| 名称    | 类型                                                      | 描述     |
+| ------- | --------------------------------------------------------- | -------- |
+| message | [OIMMessageInfo](docs/sdks/class/message/messageInfo.mdx) | 成功返回 |
+
+### 代码示例
+
+```swift showLineNumbers
+
+OIMMessageInfo *message = [OIMMessageInfo createTextAtAllMessage:@""
+                                                     displayText:nil
+                                                         message:nil];
+```
+
+
 </TabItem>
 
 <TabItem value="Android">
@@ -171,8 +205,16 @@ IMSDK.createTextAtMessage({
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
+
+// use in mini program
+// import { getSDK } from '@openim/client-sdk';
+// const IMSDK = getSDK();
 
 IMSDK.createTextAtMessage({
   text: "",
@@ -249,12 +291,103 @@ IMSDK.asyncApi('createTextAtMessage', IMSDK.uuid(), {
     ...
   }
 })
-  .then(({ data }) => {
+  .then((data) => {
     // 调用成功
   })
   .catch(({ errCode, errMsg }) => {
     // 调用失败
   });
+```
+
+</TabItem>
+<TabItem value="React-Native">
+
+### 函数原型
+
+```ts showLineNumbers
+OpenIMSDKRN.createTextAtMessage({
+  text: string,
+  atUserIDList: string[],
+  atUsersInfo: AtUsersInfoItem[];
+  message?: MessageItem;
+}, operationID: string): Promise<MessageItem>
+```
+
+### 输入参数
+
+| 参数名称     | 参数类型                                                | 是否必填 | 描述                                                    |
+| ------------ | ------------------------------------------------------- | -------- | ------------------------------------------------------- |
+| text         | string                                                  | 是       | 内容                                                    |
+| atUserIDList | string[]                                                | 是       | @人的 userID 列表                                       |
+| atUsersInfo  | [AtUsersInfoItem](docs/sdks/class/message/atInfo.mdx)[] | 是       | @人的用户信息列表                                       |
+| message      | [MessageItem](docs/sdks/class/message/messageInfo.mdx)  | 是       | 引用的消息                                              |
+| operationID  | string                                                  | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                         | 描述         |
+| --------------- | ---------------------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<[MessageItem](docs/sdks/class/message/messageInfo.mdx)\> | 调用成功回调 |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\>          | 调用失败回调 |
+
+### 代码示例
+
+```js showLineNumbers
+import OpenIMSDKRN from "open-im-sdk-rn";
+
+OpenIMSDKRN.createTextAtMessage({
+  text: "",
+  atUserIDList: ['userID'],
+  atUsersInfo: [
+    {
+      atUserID: "userID",
+      groupNickname: ""
+    },
+  ],
+  message: {
+    // MessageItem
+    ...
+  }
+}, 'operationID')
+  .then((data) => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+
+public static Message CreateTextAtMessage(string text, string[] atUserList, AtInfo[] atUsersInfo, Message message)
+
+```
+
+### 输入参数
+
+| 参数名称       | 参数类型                                               | 是否必填 | 描述              |
+| -------------- | ------------------------------------------------------ | -------- | ----------------- |
+| text           | string                                                 | 是       | 内容              |
+| atUserList   | string[]                                          | 是       | @人的 userID 列表 |
+| atUsersInfo | [AtInfo](docs/sdks/class/message/atInfo.mdx) []| 是       | @人的用户信息列表 |
+| message   | [Message](docs/sdks/class/message/messageInfo.mdx)     | 是       | 引用的消息        |
+
+### 返回结果
+
+| 名称 | 类型                                               | 描述     |
+| ---- | -------------------------------------------------- | -------- |
+| ~    | [Message](docs/sdks/class/message/messageInfo.mdx) | 成功返回 |
+
+### 代码示例
+
+```C# showLineNumbers
+var msg = IMSDK.CreateTextAtMessage(text, atUserList , atUsersInfo , message);
 ```
 
 </TabItem>

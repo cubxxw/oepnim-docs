@@ -1,0 +1,33 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    branches:
+      - main  # Trigger the action on pull requests to the main branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 'latest'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build documentation
+      run: npm run build
+
+    - name: Lint check
+      run: npm run lint
+      continue-on-error: true
+
+    - name: Type checking
+      run: npm run typecheck
+      continue-on-error: true

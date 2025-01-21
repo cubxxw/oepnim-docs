@@ -10,7 +10,7 @@ toc_max_heading_level: 2
 
 :::info
 
-语音元素
+视频信息。
 
 :::
 
@@ -21,7 +21,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -36,13 +38,13 @@ values={[
 | videoType      | String   | 资源类型     |
 | videoSize      | int      | 大小         |
 | duration       | int      | 时长         |
-| videoUrl       | String   | 图片地址     |
+| videoUrl       | String   | 视频远程地址     |
 | snapshotUUID   | String   | 唯一 ID      |
 | snapshotPath   | String   | 类型         |
 | snapshotSize   | int      | 大小         |
 | snapshotWidth  | int      | 宽度         |
 | snapshotHeight | int      | 高度         |
-| snapshotUrl    | String   | 图片地址     |
+| snapshotUrl    | String   | 视频缩略图地址     |
 
 </TabItem>
 
@@ -57,13 +59,13 @@ values={[
 | videoType      | NSString  | 资源类型     |
 | videoSize      | NSInteger | 大小         |
 | duration       | NSInteger | 时长         |
-| videoUrl       | CGFloat   | 图片地址     |
+| videoUrl       | CGFloat   | 视频远程地址     |
 | snapshotUUID   | NSString  | 唯一 ID      |
 | snapshotPath   | NSString  | 类型         |
 | snapshotSize   | NSInteger | 大小         |
 | snapshotWidth  | CGFloat   | 宽度         |
 | snapshotHeight | CGFloat   | 高度         |
-| snapshotUrl    | CGFloat   | 图片地址     |
+| snapshotUrl    | CGFloat   | 视频缩略图地址     |
 
 </TabItem>
 
@@ -85,7 +87,7 @@ values={[
 | snapshotSize   | int      | 大小         |
 | snapshotWidth  | int      | 宽度         |
 | snapshotHeight | int      | 高度         |
-| snapshotUrl    | String   | 图片地址     |
+| snapshotUrl    | String   | 视频缩略图地址     |
 
 </TabItem>
 
@@ -106,7 +108,7 @@ values={[
 | snapshotSize   | number   | 大小         |
 | snapshotWidth  | number   | 宽度         |
 | snapshotHeight | number   | 高度         |
-| snapshotUrl    | string   | 图片地址     |
+| snapshotUrl    | string   | 视频缩略图地址     |
 
 </TabItem>
 
@@ -127,8 +129,49 @@ values={[
 | snapshotSize   | number   | 大小         |
 | snapshotWidth  | number   | 宽度         |
 | snapshotHeight | number   | 高度         |
-| snapshotUrl    | string   | 图片地址     |
+| snapshotUrl    | string   | 视频缩略图地址     |
 
 </TabItem>
 
+<TabItem value="React-Native">
+
+### VideoElem
+
+| 字段名称       | 字段类型 | 描述         |
+| -------------- | -------- | ------------ |
+| videoUUID      | string   | 唯一 ID      |
+| videoPath      | string   | 本地资源地址 |
+| videoType      | string   | 资源类型     |
+| videoSize      | number   | 大小         |
+| duration       | number   | 时长         |
+| videoUrl       | string   | 图片地址     |
+| snapshotUUID   | string   | 唯一 ID      |
+| snapshotPath   | string   | 类型         |
+| snapshotSize   | number   | 大小         |
+| snapshotWidth  | number   | 宽度         |
+| snapshotHeight | number   | 高度         |
+| snapshotUrl    | string   | 视频缩略图地址     |
+
+</TabItem>
+
+<TabItem value="Unity">
+
+###  VideoBaseInfo
+
+| 字段名称       | 字段类型 | 描述         |
+| -------------- | -------- | ------------ |
+| VideoUUID      | string   | 唯一 ID      |
+| VideoPath      | string   | 本地资源地址 |
+| VideoType      | string   | 资源类型     |
+| VideoSize      | int      | 大小         |
+| Duration       | int      | 时长         |
+| VideoUrl       | string   | 视频远程地址     |
+| SnapshotUUID   | string   | 唯一 ID      |
+| SnapshotPath   | string   | 类型         |
+| SnapshotSize   | int      | 大小         |
+| SnapshotWidth  | int      | 宽度         |
+| SnapshotHeight | int      | 高度         |
+| SnapshotUrl    | string   | 视频缩略图地址     |
+
+</TabItem>
 </Tabs>

@@ -10,7 +10,7 @@ toc_max_heading_level: 2
 
 :::info
 
-同步服务器会话开始
+向服务器同步会话开始时的回调。
 
 :::
 
@@ -21,7 +21,8 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -87,8 +88,10 @@ onSyncServerStart(): void;
 ### 调用示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
-import { CbEvents } from 'open-im-sdk-wasm/constant';
+import { getSDK, CbEvents } from '@openim/wasm-client-sdk';
+// or
+// import { getSDK, CbEvents } from '@openim/client-sdk';
+// const IMSDK = getSDK();
 const IMSDK = getSDK();
 
 IMSDK.on(CbEvents.OnSyncServerStart, () => {});
@@ -120,4 +123,17 @@ IMSDK.subscribe(IMSDK.IMEvents.OnSyncServerStart, () => {});
 
 </TabItem>
 
+<TabItem value="Unity">
+
+### 返回原型
+
+```C# showLineNumbers
+void OnSyncServerStart();
+```
+
+### 返回结果
+
+无
+
+</TabItem>
 </Tabs>

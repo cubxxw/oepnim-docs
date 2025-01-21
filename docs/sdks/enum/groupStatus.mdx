@@ -8,18 +8,18 @@ toc_max_heading_level: 2
 
 :::info
 
-群状态
+群状态。
 
 :::
 
 ## 群状态选项 {#GroupStatus}
 
-| 枚举值 | 描述 |
-| ------ | ---- |
-| 0      | 正常 |
-| 1      | 封禁 |
-| 2      | 解散 |
-| 3      | 禁言 |
+| 枚举值 | 描述             |
+| ------ | ---------------- |
+| 0      | 正常             |
+| 1      | 封禁（暂未使用） |
+| 2      | 解散             |
+| 3      | 禁言             |
 
 <Tabs
 groupId="sdks-language"
@@ -28,19 +28,28 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
 <TabItem value="Flutter">
 
-### 枚举详解
+### GroupStatus
+
+| 枚举值名称 | 枚举值 |
+| ---------- | ------ |
+| nomal      | 0      |
+| baned      | 1      |
+| dismissed  | 2      |
+| muted      | 3      |
 
 </TabItem>
 
 <TabItem value="iOS">
 
-### 枚举详解 OIMGroupStatus
+### OIMGroupStatus
 
 | 枚举值名称              | 枚举值 |
 | ----------------------- | ------ |
@@ -53,14 +62,14 @@ values={[
 
 <TabItem value="Android">
 
-### 枚举详解 GroupStatus
+### GroupStatus
 
-| 枚举值名称              | 枚举值 |
-| ----------------------- | ------ |
-| GROUP_OK        | 0      |
+| 枚举值名称     | 枚举值 |
+| -------------- | ------ |
+| GROUP_OK       | 0      |
 | GROUP_BANNED   | 1      |
 | GROUP_DISSOLVE | 2      |
-| GROUP_MUTED     | 3      |
+| GROUP_MUTED    | 3      |
 
 </TabItem>
 
@@ -78,6 +87,32 @@ values={[
 </TabItem>
 
 <TabItem value="uni-app">
+
+### GroupStatus
+
+| 枚举值名称 | 枚举值 |
+| ---------- | ------ |
+| Nomal      | 0      |
+| Baned      | 1      |
+| Dismissed  | 2      |
+| Muted      | 3      |
+
+</TabItem>
+
+<TabItem value="React-Native">
+
+### GroupStatus
+
+| 枚举值名称 | 枚举值 |
+| ---------- | ------ |
+| Nomal      | 0      |
+| Baned      | 1      |
+| Dismissed  | 2      |
+| Muted      | 3      |
+
+</TabItem>
+
+<TabItem value="Unity">
 
 ### GroupStatus
 

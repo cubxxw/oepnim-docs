@@ -1,4 +1,5 @@
 ---
+sidebar_position: 2
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,16 +10,21 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-（1）指定群管理员和群普通成员创建群组；  
+（1）创建者为群主身份创建群组，并指定群管理员和群普通成员，成功后，所有成员立刻入群；   
 （2）群成员建议一次最大 1000 个，因为数量过多可能会导致数据包太大被后台拒绝。
 
 :::
 
 :::caution 注意
 
-（1）如果指定 groupID，则 groupID 不能重复；  
-（2）如果不指定 groupID，服务端会生成唯一的 groupID  
-（3）所有群成员会收到 OnJoinedGroupAdded 和 OnGroupMemberAdded 回调。
+（1）如果指定 groupID，则 groupID 不能重复；     
+（2）如果不指定 groupID，服务端会生成唯一的 groupID。  
+
+**相关回调**:    
+[onJoinedGroupAdded](../../callback/onJoinedGroupAdded)   
+[onGroupMemberAdded](../../callback/onGroupMemberAdded) 
+
+
 
 :::
 
@@ -29,7 +35,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -52,8 +60,8 @@ Future<GroupInfo> createGroup({
 | 参数名称      | 参数类型                                         | 是否必填 | 描述           |
 | ------------- | ------------------------------------------------ | -------- | -------------- |
 | groupInfo     | [GroupInfo](docs/sdks/class/group/groupInfo.mdx) | 是       | 群信息         |
-| memberUserIDs | List<String\>                                    | 是       | 初始成员极角色 |
-| adminUserIDs  | List<String\>                                    | 否       | 初始管理员     |
+| memberUserIDs | List<String\>                                    | 是       | 邀请进入的群成员列表 |
+| adminUserIDs  | List<String\>                                    | 否       | 邀请进入并设为管理员的列表      |
 | ownerUserID   | String                                           | 否       | 群主           |
 
 ### 返回结果
@@ -88,7 +96,6 @@ Future<GroupInfo> createGroup({
 ```swift showLineNumbers
 
 - (void)createGroup:(OIMGroupCreateInfo *)groupCreateInfo
-         memberList:(NSArray<OIMGroupMemberBaseInfo *> *)list
           onSuccess:(nullable OIMGroupInfoCallback)onSuccess
           onFailure:(nullable OIMFailureCallback)onFailure;
 
@@ -98,15 +105,14 @@ Future<GroupInfo> createGroup({
 
 | 参数名称        | 参数类型                                                                         | 是否必填 | 描述   |
 | --------------- | -------------------------------------------------------------------------------- | -------- | ------ |
-| groupCreateInfo | [OIMGroupCreateInfo](docs/sdks/class/group/groupInfo.mdx)                        | 是       | 群信息 |
-| list            | NSArray< [OIMGroupMemberBaseInfo](docs/sdks/class/group/groupMemberInfo.mdx) \*> | 是       | 用户   |
+| groupCreateInfo | [OIMGroupCreateInfo](docs/sdks/class/group/groupInfo.mdx)                        | 是       | 创建群的初始化信息 |
 
 ### 返回结果
 
 | 参数名称  | 参数类型                                             | 描述     |
 | --------- | ---------------------------------------------------- | -------- |
 | onSuccess | [OIMGroupInfo](docs/sdks/class/group/groupInfo.mdx)  | 成功返回 |
-| onFailure | [OIMFailureCallback](docs/sdks/callback/onError.mdx) | 失败返回 |
+| onFailure | OIMFailureCallback | 失败返回 |
 
 ### 代码示例
 
@@ -116,12 +122,7 @@ OIMGroupCreateInfo *group = [OIMGroupCreateInfo new];
 group.groupName = @"";
 group.introduction = @"";
 
-OIMGroupMemberBaseInfo *member1 = [OIMGroupMemberBaseInfo new];
-member.userID = @"";
-member.roleLevel = OIMGroupMemberRoleMember;
-
 [OIMManager.manager createGroup:group
-                    memberList:@[member1]
                       onSuccess:^(OIMGroupInfo * _Nullable groupInfo) {
 } onFailure:^(NSInteger code, NSString * _Nullable msg) {
 }];
@@ -136,21 +137,18 @@ member.roleLevel = OIMGroupMemberRoleMember;
 
 ```java showLineNumbers
 
-public void createGroup(OnBase<GroupInfo> callBack, String groupName, String faceURL, String notification, String introduction, int groupType, String ex, List<GroupMemberRole> list)
-
+    public void createGroup(List<String> memberUserIDs, List<String> adminUserIDs,
+                            GroupInfo groupInfo, String ownerUserID, OnBase<GroupInfo> callBack)
 ```
-
 ### 输入参数
 
-| 参数名称     | 参数类型                                                                                  | 是否必填 | 描述                       |
-| ------------ | ----------------------------------------------------------------------------------------- | -------- | -------------------------- |
+| 参数名称      | 参数类型                                             | 是否必填 | 描述                       |
+| ------------- | ---------------------------------------------------- | -------- | -------------------------- |
+| groupInfo     | [GroupInitInfo](docs/sdks/class/group/groupInfo.mdx) | 是       | 群聊基础信息               |
+| memberUserIDs | string[]                                             | 是       | 邀请进入的群成员列表       |
+| adminUserIDs  | string[]                                             | 否       | 邀请进入并设为管理员的列表 |
+| ownerUserID   | string                                               | 否       | 群主 ID                    |
 | callBack     | [OnBase](docs/sdks/callback/onBase.mdx)<[GroupInfo](docs/sdks/class/group/groupInfo.mdx)> | 是       | 回调接口                   |
-| groupName    | String                                                                                    | 是       | 群名称                     |
-| faceURL      | String                                                                                    | 否       | 群 icon                    |
-| notification | String                                                                                    | 否       | 群公告                     |
-| introduction | String                                                                                    | 否       | 群简介                     |
-| groupType    | int                                                                                       | 否       | 0 普通群 1 超级群 2 工作群 |
-| ex           | String                                                                                    | 否       | 扩展信息                   |
 
 ### 返回结果
 
@@ -158,18 +156,18 @@ public void createGroup(OnBase<GroupInfo> callBack, String groupName, String fac
 
 ```java showLineNumbers
 
- OpenIMClient.getInstance().groupManager.createGroup(new OnBase<GroupInfo>() {
-            @Override
-            public void onError(int code, String error) {
+OpenIMClient.getInstance().groupManager.createGroup(memberUserIDs,  adminUserIDs,
+     groupInfo,  ownerUserID,  new OnBase<String>() {
+    @Override
+    public void onError(int code, String error) {
 
-            }
-
-            @Override
-            public void onSuccess(GroupInfo data) {
-
-            }
-        }, groupName,  faceURL,  notification,  introduction,  groupType,  ex,  list);
     }
+
+    @Override
+    public void onSuccess(String data) {
+
+    }
+});
 
 ```
 
@@ -181,7 +179,7 @@ public void createGroup(OnBase<GroupInfo> callBack, String groupName, String fac
 
 ```ts showLineNumbers
 IMSDK.createGroup({
-  groupInfo:GroupInitInfo,
+  groupInfo:Partial<GroupItem>,
   memberUserIDs: string[],
   adminUserIDs?: string[],
   ownerUserID?: string
@@ -192,7 +190,7 @@ IMSDK.createGroup({
 
 | 参数名称      | 参数类型                                             | 是否必填 | 描述                       |
 | ------------- | ---------------------------------------------------- | -------- | -------------------------- |
-| groupInfo     | [GroupInitInfo](docs/sdks/class/group/groupInfo.mdx) | 是       | 群聊基础信息               |
+| groupInfo     | Partial<[GroupItem](docs/sdks/class/group/groupInfo.mdx)> | 是       | 群聊基础信息               |
 | memberUserIDs | string[]                                             | 是       | 邀请进入的群成员列表       |
 | adminUserIDs  | string[]                                             | 否       | 邀请进入并设为管理员的列表 |
 | ownerUserID   | string                                               | 否       | 群主 ID                    |
@@ -207,8 +205,16 @@ IMSDK.createGroup({
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
+
+// use in mini program
+// import { getSDK } from '@openim/client-sdk';
+// const IMSDK = getSDK();
 
 IMSDK.createGroup({
   groupInfo: {
@@ -233,7 +239,7 @@ IMSDK.createGroup({
 
 ```ts showLineNumbers
 IMSDK.asyncApi('createGroup', operationID: string, {
-  groupInfo: GroupInitInfo,
+  groupInfo: Partial<GroupItem>,
   memberUserIDs: string[],
   adminUserIDs?: string[],
   ownerUserID?: string
@@ -245,7 +251,7 @@ IMSDK.asyncApi('createGroup', operationID: string, {
 | 参数名称      | 参数类型                                             | 是否必填 | 描述                                                    |
 | ------------- | ---------------------------------------------------- | -------- | ------------------------------------------------------- |
 | operationID   | string                                               | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
-| groupInfo     | [GroupInitInfo](docs/sdks/class/group/groupInfo.mdx) | 是       | 群聊基础信息                                            |
+| groupInfo     | Partial<[GroupItem](docs/sdks/class/group/groupInfo.mdx)> | 是       | 群聊基础信息               |
 | memberUserIDs | string[]                                             | 是       | 邀请进入的群成员列表                                    |
 | adminUserIDs  | string[]                                             | 否       | 邀请进入并设为管理员的列表                              |
 | ownerUserID   | string                                               | 否       | 群主 ID                                                 |
@@ -271,12 +277,100 @@ IMSDK.asyncApi('createGroup', IMSDK.uuid(), {
   },
   memberUserIDs: [''],
 })
-  .then(({ data }) => {
+  .then((data) => {
     // 调用成功
   })
   .catch(({ errCode, errMsg }) => {
     // 调用失败
   });
+```
+
+</TabItem>
+<TabItem value="React-Native">
+
+### 函数原型
+
+```ts showLineNumbers
+OpenIMSDKRN.createGroup({
+  groupInfo: Partial<GroupItem>,
+  memberUserIDs: string[],
+  adminUserIDs?: string[],
+  ownerUserID?: string
+}, operationID: string): Promise<GroupItem>
+```
+
+### 输入参数
+
+| 参数名称      | 参数类型                                             | 是否必填 | 描述                                                    |
+| ------------- | ---------------------------------------------------- | -------- | ------------------------------------------------------- |
+| groupInfo     | Partial<[GroupItem](docs/sdks/class/group/groupInfo.mdx)> | 是       | 群聊基础信息               |
+| memberUserIDs | string[]                                             | 是       | 邀请进入的群成员列表                                    |
+| adminUserIDs  | string[]                                             | 否       | 邀请进入并设为管理员的列表                              |
+| ownerUserID   | string                                               | 否       | 群主 ID                                                 |
+| operationID   | string                                               | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
+
+### 返回结果
+
+
+| 参数名称        | 参数类型                                                   | 描述         |
+| --------------- | ---------------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<[GroupItem](docs/sdks/class/group/groupInfo.mdx)\> | 调用成功回调 |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\>    | 调用失败回调 |
+
+### 代码示例
+
+```js showLineNumbers
+import OpenIMSDKRN from "open-im-sdk-rn";
+
+OpenIMSDKRN.createGroup({
+  groupInfo: {
+    groupName: '',
+    groupType: 2,
+  },
+  memberUserIDs: [''],
+}, 'operationID')
+  .then((data) => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+
+public static void CreateGroup(OnBase<GroupInfo> cb, CreateGroupReq groupReqInfo)
+
+```
+### 输入参数
+
+| 参数名称      | 参数类型                                             | 是否必填 | 描述                       |
+| ------------- | ---------------------------------------------------- | -------- | -------------------------- |
+| cb | [OnBase](docs/sdks/callback/onBase.mdx)<[GroupInfo](docs/sdks/class/group/groupInfo.mdx)> | 是       |  回调 |
+| groupReqInfo   | [CreateGroupReq](docs/sdks/class/group/CreateGroupReq.mdx) | 是       |  建群参数              |
+
+### 返回结果
+
+### 代码示例
+
+```C# showLineNumbers
+
+IMSDK.CreateGroup((groupInfo,errCode,errMsg)=>{
+    
+},new CreateGroupReq(){
+    MemberUserIDs={""},
+    GroupInfo = groupInfo,
+    AdminUserIDs = {},
+    OwnerUserID = "",
+});
+
+
 ```
 
 </TabItem>

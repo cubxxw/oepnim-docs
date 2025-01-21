@@ -1,4 +1,5 @@
 ---
+sidebar_position: 6
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,11 +10,7 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-获取会话 ID
-
-:::
-
-:::caution 注意
+根据会话类型获取会话 ID。
 
 :::
 
@@ -24,7 +21,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -43,8 +42,8 @@ Future<dynamic> getConversationIDBySessionType({
 
 | 参数名称    | 参数类型 | 是否必填 | 描述                                                            |
 | ----------- | -------- | -------- | --------------------------------------------------------------- |
-| sessionType | int      | 是       | 会话类型[ConversationType](docs/sdks/enum/conversationType.mdx) |
-| sourceID    | String   | 是       | 单聊为用户 ID，群聊为群 ID                                      |
+| sessionType | [int](docs/sdks/enum/conversationType.mdx)      | 是       | 会话类型 |
+| sourceID    | String   | 是       | 单聊为用户 ID，群聊为群ID                                      |
 
 ### 返回结果
 
@@ -77,7 +76,7 @@ Future<dynamic> getConversationIDBySessionType({
 | 参数名称    | 参数类型                                                   | 是否必填 | 描述                       |
 | ----------- | ---------------------------------------------------------- | -------- | -------------------------- |
 | sessionType | [OIMConversationType](docs/sdks/enum/conversationType.mdx) | 是       | 会话类型                   |
-| sourceID    | NSString                                                   | 是       | 单聊为用户 ID，群聊为群 ID |
+| sourceID    | NSString                                                   | 是       | 单聊为用户 ID，群聊为群ID |
 
 ### 返回结果
 
@@ -110,7 +109,7 @@ NSString *conversationID = [OIMManager.manager getConversationIDBySessionType:OI
 | 参数名称    | 参数类型                                                   | 是否必填 | 描述                       |
 | ----------- | ---------------------------------------------------------- | -------- | -------------------------- |
 | sessionType | [OIMConversationType](docs/sdks/enum/conversationType.mdx) | 是       | 会话类型                   |
-| sourceID    | String                                                     | 是       | 单聊为用户 ID，群聊为群 ID |
+| sourceID    | String                                                     | 是       | 单聊为用户 ID，群聊为群ID |
 
 ### 返回结果
 
@@ -156,8 +155,12 @@ IMSDK.getConversationIDBySessionType({
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
 
 IMSDK.getConversationIDBySessionType({
   sourceID: 'user1',
@@ -210,12 +213,90 @@ IMSDK.asyncApi('getConversationIDBySessionType', IMSDK.uuid(), {
   sourceID: 'user1',
   sessionType: 1,
 })
-  .then(({ data }) => {
+  .then((data) => {
     // 调用成功
   })
   .catch(({ errCode, errMsg }) => {
     // 调用失败
   });
+```
+
+</TabItem>
+<TabItem value="React-Native">
+
+### 函数原型
+
+```ts showLineNumbers
+OpenIMSDKRN.getConversationIDBySessionType({
+  sourceID: string,
+  sessionType: number,
+}, operationID: string): Promise<string>
+```
+
+### 输入参数
+
+| 参数名称    | 参数类型                                           | 是否必填 | 描述                                                    |
+| ----------- | -------------------------------------------------- | -------- | ------------------------------------------------------- |
+| operationID | string                                             | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
+| sourceID    | string                                             | 是       | 会话的用户 ID(单聊)或 groupID(群聊)                     |
+| sessionType | [SessionType](docs/sdks/enum/conversationType.mdx) | 是       | 会话类型                                                |
+
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                | 描述         |
+| --------------- | ------------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<string\>                                        | 调用成功回调 |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\> | 调用失败回调 |
+
+### 代码示例
+
+```js showLineNumbers
+import OpenIMSDKRN from "open-im-sdk-rn";
+
+OpenIMSDKRN.getConversationIDBySessionType({
+  sourceID: 'user1',
+  sessionType: 1,
+}, 'operationID')
+  .then((data) => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+
+public static string GetConversationIdBySessionType(string sourceId, int sessionType)
+
+```
+
+### 输入参数
+
+| 参数名称    | 参数类型                                                   | 是否必填 | 描述                       |
+| ----------- | ---------------------------------------------------------- | -------- | -------------------------- |
+| sourceId    | string                                                     | 是       | 单聊为用户 ID，群聊为群ID |
+| sessionType | [ConversationType](docs/sdks/enum/conversationType.mdx) | 是       | 会话类型                   |
+
+### 返回结果
+
+| 名称           | 类型   | 描述     |
+| -------------- | ------ | -------- |
+| conversationId | string | 成功返回 |
+
+### 代码示例
+
+```C# showLineNumbers
+
+var conversationID =IMSDK.GetConversationIDBySessionType(sourceID,sessionType);
+
 ```
 
 </TabItem>

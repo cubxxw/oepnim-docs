@@ -1,4 +1,5 @@
 ---
+sidebar_position: 14
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,13 +10,14 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-获取指定群成员信息
+获取指定群成员信息。
 
 :::
 
 :::caution 注意
 
-群列表建议一次最大 100 个；
+（1）调用者必须加入此群才可调用；     
+（2）群列表建议一次最大 10000 个。  
 
 :::
 
@@ -26,7 +28,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -46,7 +50,7 @@ Future<List<GroupMembersInfo>> getGroupMembersInfo({
 
 | 参数名称   | 参数类型      | 是否必填 | 描述         |
 | ---------- | ------------- | -------- | ------------ |
-| groupID    | String        | 是       | 群 ID        |
+| groupID    | String        | 是       | 群ID        |
 | userIDList | List<String\> | 是       | 成员 ID 列表 |
 
 ### 返回结果
@@ -84,7 +88,7 @@ Future<List<GroupMembersInfo>> getGroupMembersInfo({
 
 | 参数名称 | 参数类型              | 是否必填 | 描述         |
 | -------- | --------------------- | -------- | ------------ |
-| groupID  | NSString              | 是       | 群 ID        |
+| groupID  | NSString              | 是       | 群ID        |
 | usersID  | NSArray <NSString \*> | 是       | 成员 ID 列表 |
 
 ### 返回结果
@@ -92,7 +96,7 @@ Future<List<GroupMembersInfo>> getGroupMembersInfo({
 | 参数名称  | 参数类型                                                                     | 描述     |
 | --------- | ---------------------------------------------------------------------------- | -------- |
 | onSuccess | NSArray< [OIMGroupMemberInfo](docs/sdks/class/group/groupMemberInfo.mdx) \*> | 成功返回 |
-| onFailure | [OIMFailureCallback](docs/sdks/callback/onError.mdx)                         | 失败返回 |
+| onFailure | OIMFailureCallback                         | 失败返回 |
 
 ### 代码示例
 
@@ -123,7 +127,7 @@ Future<List<GroupMembersInfo>> getGroupMembersInfo({
 | 参数名称 | 参数类型                                                                                                     | 是否必填 | 描述         |
 | -------- | ------------------------------------------------------------------------------------------------------------ | -------- | ------------ |
 | callBack | [OnBase](docs/sdks/callback/onBase.mdx)<List<[GroupMembersInfo](docs/sdks/class/group/groupMemberInfo.mdx)>> | 是       | 回调接口     |
-| groupId  | String                                                                                                       | 是       | 群 ID        |
+| groupId  | String                                                                                                       | 是       | 群ID        |
 | uidList  | List<String\>                                                                                                | 是       | 成员 ID 列表 |
 
 ### 返回结果
@@ -164,7 +168,7 @@ IMSDK.getSpecifiedGroupMembersInfo({
 
 | 参数名称   | 参数类型 | 是否必填 | 描述           |
 | ---------- | -------- | -------- | -------------- |
-| groupID    | string   | 是       | 群 ID          |
+| groupID    | string   | 是       | 群ID          |
 | userIDList | string[] | 是       | 群成员 ID 列表 |
 
 ### 返回结果
@@ -177,8 +181,16 @@ IMSDK.getSpecifiedGroupMembersInfo({
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
+
+// use in mini program
+// import { getSDK } from '@openim/client-sdk';
+// const IMSDK = getSDK();
 
 IMSDK.getSpecifiedGroupMembersInfo({
   groupID: '',
@@ -210,7 +222,7 @@ IMSDK.asyncApi('getSpecifiedGroupMembersInfo', operationID: string, {
 | 参数名称    | 参数类型 | 是否必填 | 描述                                                    |
 | ----------- | -------- | -------- | ------------------------------------------------------- |
 | operationID | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
-| groupID     | string   | 是       | 群 ID                                                   |
+| groupID     | string   | 是       | 群ID                                                   |
 | userIDList  | string[] | 是       | 群成员 ID 列表                                          |
 
 ### 返回结果
@@ -237,6 +249,82 @@ IMSDK.asyncApi('getSpecifiedGroupMembersInfo', IMSDK.uuid(), {
   .catch(({ errCode, errMsg }) => {
     // 调用失败
   });
+```
+
+</TabItem>
+<TabItem value="React-Native">
+
+### 函数原型
+
+```ts showLineNumbers
+OpenIMSDKRN.getSpecifiedGroupMembersInfo({
+  groupID: string,
+  userIDList: string[], 
+}, operationID: string): Promise<GroupMemberItem[]>
+```
+
+### 输入参数
+
+| 参数名称    | 参数类型 | 是否必填 | 描述                                                    |
+| ----------- | -------- | -------- | ------------------------------------------------------- |
+| groupID     | string   | 是       | 群ID                                                   |
+| userIDList  | string[] | 是       | 群成员 ID 列表                                          |
+| operationID | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                                 | 描述         |
+| --------------- | ------------------------------------------------------------------------ | ------------ |
+| Promise.then()  | Promise<[GroupMemberItem](docs/sdks/class/group/groupMemberInfo.mdx)[]\> | 群成员列表   |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\>                  | 调用失败回调 |
+
+### 代码示例
+
+```js showLineNumbers
+import OpenIMSDKRN from "open-im-sdk-rn";
+
+OpenIMSDKRN.getSpecifiedGroupMembersInfo({
+  groupID: '',
+  userIDList: ['userID'],
+}, 'operationID')
+  .then((data) => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+
+public static void GetSpecifiedGroupMembersInfo(OnBase<List<GroupMember>> cb, string groupId, string[] userIdList)
+
+```
+
+### 输入参数
+
+| 参数名称 | 参数类型                                                                                                     | 是否必填 | 描述         |
+| -------- | ------------------------------------------------------------------------------------------------------------ | -------- | ------------ |
+| cb| [OnBase](docs/sdks/callback/onBase.mdx)<List<[GroupMembersInfo](docs/sdks/class/group/groupMemberInfo.mdx)>>| 是       | 回调接口     |
+| groupId  | string                                                                                                       | 是       | 群ID        |
+| userIdList | string[]                                                                                                | 是       | 成员 ID 列表 |
+
+### 返回结果
+
+### 代码示例
+
+```C# showLineNumbers
+
+IMSDK.GetSpecifiedGroupMembersInfo((list,errCode,errMsg)=>{
+
+},groupId,userIdList);
+
 ```
 
 </TabItem>

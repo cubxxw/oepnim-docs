@@ -10,7 +10,7 @@ toc_max_heading_level: 2
 
 :::info
 
-合并消息元素
+消息合并信息。
 
 :::
 
@@ -21,7 +21,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -45,8 +47,7 @@ values={[
 | ----------------- | --------------------------------------------------------------------------- | ------------------ |
 | title             | NSString                                                                    | 标题               |
 | abstractList      | NSArray<NSString \*>                                                        | 摘要               |
-| multiMessage      | NSArray< [OIMMessageInfo](docs/sdks/class/message/messageInfo.mdx) \* >     | 选择合并的消息列表 |
-| messageEntityList | NSArray< [OIMMessageEntity](docs/sdks/class/message/messageEntity.mdx) \* > |                    |
+| multiMessage      | NSArray< [OIMMessageInfo](docs/sdks/class/message/messageInfo.mdx) \* >     | 具体选择合并的消息列表 |
 
 </TabItem>
 
@@ -85,5 +86,30 @@ values={[
 | multiMessage | [MessageItem](docs/sdks/class/message/messageInfo.mdx)[] | 具体选择合并的消息列表 |
 
 </TabItem>
+
+<TabItem value="React-Native">
+
+### MergeElem
+
+| 字段名称     | 字段类型                                                 | 描述                   |
+| ------------ | -------------------------------------------------------- | ---------------------- |
+| Title        | string                                                   | 标题                   |
+| AbstractList | string[]                                            | 摘要                   |
+| MultiMessage | [Message](docs/sdks/class/message/messageInfo.mdx)[] | 具体选择合并的消息列表 |
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### MergeElem
+
+| 字段名称     | 字段类型                                                 | 描述                   |
+| ------------ | -------------------------------------------------------- | ---------------------- |
+| title        | string                                                   | 标题                   |
+| abstractList | string[]                                                 | 摘要列表               |
+| multiMessage | [MessageItem](docs/sdks/class/message/messageInfo.mdx)[] | 具体选择合并的消息列表 |
+
+</TabItem>
+
 
 </Tabs>

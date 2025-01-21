@@ -10,18 +10,15 @@ toc_max_heading_level: 2
 
 :::info
 
-收到新的离线消息，批量触发
+当应用在后台运行，接收到新消息时，会收到该回调，回调中可能会携带多条消息。
 
 :::
 
 <Tabs
 groupId="sdks-language"
 values={[
-{ label: 'iOS', value: 'iOS', },
-{ label: 'Android', value: 'Android', },
-{ label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
 ]
 }>
 
@@ -62,8 +59,10 @@ onRecvOfflineNewMessages(data: WSEvent<MessageItem[]>): void;
 ### 调用示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
-import { CbEvents } from 'open-im-sdk-wasm/constant';
+import { getSDK, CbEvents } from '@openim/wasm-client-sdk';
+// or
+// import { getSDK, CbEvents } from '@openim/client-sdk';
+// const IMSDK = getSDK();
 const IMSDK = getSDK();
 
 IMSDK.on(CbEvents.OnRecvOfflineNewMessages, ({ data }) => {

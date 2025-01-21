@@ -10,7 +10,7 @@ toc_max_heading_level: 2
 
 :::info
 
-查找本地消息结果的 item
+查找本地消息结果。
 
 :::
 
@@ -21,7 +21,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -32,11 +34,11 @@ values={[
 | 字段名称         | 字段类型                                                 | 描述                                                             |
 | ---------------- | -------------------------------------------------------- | ---------------------------------------------------------------- |
 | conversationID   | String                                                   | 会话 ID                                                          |
-| messageCount     | int                                                      | 这个会话下的消息数量                                             |
-| conversationType | int                                                      | 回话类型 [ConversationType](docs/sdks/enum/conversationType.mdx) |
-| showName         | String                                                   | 显示名                                                           |
-| faceURL          | String                                                   | 头像                                                             |
-| messageList      | List<[Message](docs/sdks/class/message/messageInfo.mdx)> |                                                                  |
+| messageCount     | int                                                      | 会话下的消息数量                                             |
+| conversationType | [int](docs/sdks/enum/conversationType.mdx)                                                      | 会话类型  |
+| showName         | String                                                   | 会话名称                                                           |
+| faceURL          | String                                                   | 会话头像                                                             |
+| messageList      | List<[Message](docs/sdks/class/message/messageInfo.mdx)> |  会话下的消息列表                                                                |
 
 </TabItem>
 
@@ -48,10 +50,10 @@ values={[
 | ---------------- | ------------------------------------------------------------------------ | -------------------- |
 | conversationID   | NSString                                                                 | 会话 ID              |
 | messageCount     | NSInteger                                                                | 这个会话下的消息数量 |
-| conversationType | [OIMConversationType](docs/sdks/enum/conversationType.mdx)               |                      |
-| showName         | NSString                                                                 |                      |
-| faceURL          | NSString                                                                 |                      |
-| messageList      | NSArray < [OIMMessageInfo](docs/sdks/class/message/messageInfo.mdx) \* > |                      |
+| conversationType | [OIMConversationType](docs/sdks/enum/conversationType.mdx)               | 会话类型                     |
+| showName         | NSString                                                                 | 会话名称                     |
+| faceURL          | NSString                                                                 |  会话头像                    |
+| messageList      | NSArray < [OIMMessageInfo](docs/sdks/class/message/messageInfo.mdx) \* > | 会话下的消息列表                     |
 
 </TabItem>
 
@@ -99,4 +101,33 @@ values={[
 
 </TabItem>
 
+<TabItem value="React-Native">
+
+### SearchMessageResultItem
+
+| 字段名称         | 字段类型                                                 | 描述             |
+| ---------------- | -------------------------------------------------------- | ---------------- |
+| conversationID   | string                                                   | 会话 ID          |
+| messageCount     | number                                                   | 会话下的消息数量 |
+| conversationType | [SessionType](docs/sdks/enum/conversationType.mdx)       | 会话类型         |
+| showName         | string                                                   | 会话名称         |
+| faceURL          | string                                                   | 会话头像         |
+| messageList      | [MessageItem](docs/sdks/class/message/messageInfo.mdx)[] | 会话下的消息列表 |
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### SearchResultItem
+
+| 字段名称         | 字段类型                                                 | 描述                                                             |
+| ---------------- | -------------------------------------------------------- | ---------------------------------------------------------------- |
+| ConversationID   | string                                                   | 会话 ID                                                          |
+| MessageCount     | int                                                      | 会话下的消息数量                                             |
+| ConversationType | [int](docs/sdks/enum/conversationType.mdx)                                                      | 会话类型  |
+| ShowName         | string                                                   | 会话名称                                                           |
+| FaceURL          | string                                                   | 会话头像                                                             |
+| MessageList      | [Message](docs/sdks/class/message/messageInfo.mdx)[] |  会话下的消息列表                                                                |
+
+</TabItem>
 </Tabs>

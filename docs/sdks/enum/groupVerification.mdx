@@ -8,7 +8,7 @@ toc_max_heading_level: 2
 
 :::info
 
-进群验证
+进群验证选项。
 
 :::
 
@@ -16,8 +16,8 @@ toc_max_heading_level: 2
 
 | 枚举值 | 描述                                 |
 | ------ | ------------------------------------ |
-| 0      | 申请需要同意 邀请直接进              |
-| 1      | 所有人进群需要验证，除了群主管理员邀 |
+| 0      | 申请进群需要群主或管理员同意；群成员邀请可以直接进群              |
+| 1      | 申请进群需要群主或管理员同意；群主和管理员邀请可以直接进群；普通成员邀请进群需群主或管理员同意 |
 | 2      | 直接进群                             |
 
 <Tabs
@@ -27,13 +27,15 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
 <TabItem value="Flutter">
 
-### 枚举详解 GroupVerification
+### GroupVerification
 
 | 枚举值名称                          | 枚举值 |
 | ----------------------------------- | ------ |
@@ -45,7 +47,7 @@ values={[
 
 <TabItem value="iOS">
 
-### 枚举详解 OIMGroupVerificationType
+### OIMGroupVerificationType
 
 | 枚举值名称                                                  | 枚举值 |
 | ----------------------------------------------------------- | ------ |
@@ -57,7 +59,7 @@ values={[
 
 <TabItem value="Android">
 
-### 枚举详解 GroupVerification
+###  GroupVerification
 
 | 枚举值名称                          | 枚举值 |
 | ----------------------------------- | ------ |
@@ -91,4 +93,27 @@ values={[
 
 </TabItem>
 
+<TabItem value="React-Native">
+
+### GroupVerificationType
+
+| 枚举值名称         | 枚举值 |
+| ------------------ | ------ |
+| ApplyNeedInviteNot | 0      |
+| AllNeed            | 1      |
+| AllNot             | 2      |
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### GroupVerificationType
+
+| 枚举值名称         | 枚举值 |
+| ------------------ | ------ |
+| ApplyNeedInviteNot | 0      |
+| AllNeed            | 1      |
+| AllNot             | 2      |
+
+</TabItem>
 </Tabs>

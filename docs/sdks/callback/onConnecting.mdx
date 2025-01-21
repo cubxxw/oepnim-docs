@@ -9,7 +9,7 @@ toc_max_heading_level: 2
 
 :::info
 
-黑名单新增通知
+建立WebSocket连接中，触发此回调
 
 :::
 
@@ -20,7 +20,8 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -28,11 +29,23 @@ values={[
 
 ### 返回原型
 
+```dart showLineNumbers
+
+ Function()? onConnecting;
+
+```
+
 </TabItem>
 
 <TabItem value="iOS">
 
 ### 返回原型
+
+```swift showLineNumbers
+
+- (void)onConnecting;
+
+```
 
 </TabItem>
 
@@ -64,8 +77,10 @@ onConnecting(data: WSEvent): void;
 ### 调用示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
-import { CbEvents } from 'open-im-sdk-wasm/constant';
+import { getSDK, CbEvents } from '@openim/wasm-client-sdk';
+// or
+// import { getSDK, CbEvents } from '@openim/client-sdk';
+// const IMSDK = getSDK();
 const IMSDK = getSDK();
 
 IMSDK.on(CbEvents.OnConnecting, () => {});
@@ -101,6 +116,16 @@ onConnecting(data: WSEvent): void;
 import IMSDK from 'openim-uniapp-polyfill';
 
 IMSDK.subscribe(IMSDK.IMEvents.OnConnecting, () => {});
+```
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### 返回原型
+
+```C# showLineNumbers
+void OnConnecting();
 ```
 
 </TabItem>

@@ -8,20 +8,20 @@ toc_max_heading_level: 2
 
 :::info
 
-筛选成员类型
+筛选成员类型。
 
 :::
 
-## 群权限选项 {#GroupMemberFilter}
+## 筛选成员选项 {#GroupMemberFilter}
 
-| 枚举值 | 描述           |
-| ------ | -------------- |
-| 0      | 所有，查询可用 |
-| 1      | 群主           |
-| 2      | 群管理员       |
-| 3      | 群成员         |
-| 4      | 管理员和成员   |
-| 5      | 群主和管理员   |
+| 枚举值 | 描述               |
+| ------ | ------------------ |
+| 0      | 所有成员           |
+| 1      | 群主               |
+| 2      | 群管理员           |
+| 3      | 群普通成员         |
+| 4      | 群管理员和普通成员 |
+| 5      | 群主和群管理员       |
 
 <Tabs
 groupId="sdks-language"
@@ -30,19 +30,30 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
 <TabItem value="Flutter">
 
-### 枚举详解
+### GroupMemberFilter
+
+| 枚举值名称    | 枚举值 |
+| ------------- | ------ |
+| all           | 0      |
+| owner         | 1      |
+| admin         | 2      |
+| member        | 3      |
+| adminAndNomal | 4      |
+| adminAndOwner | 5      |
 
 </TabItem>
 
 <TabItem value="iOS">
 
-### 枚举详解 OIMGroupMemberRole
+### OIMGroupMemberRole
 
 | 枚举值名称                         | 枚举值 |
 | ---------------------------------- | ------ |
@@ -57,7 +68,16 @@ values={[
 
 <TabItem value="Android">
 
-### 枚举详解
+### GroupMemberFilter
+
+| 枚举值名称    | 枚举值 |
+| ------------- | ------ |
+| All           | 0      |
+| Owner         | 1      |
+| Admin         | 2      |
+| Nomal         | 3      |
+| AdminAndNomal | 4      |
+| AdminAndOwner | 5      |
 
 </TabItem>
 
@@ -77,6 +97,36 @@ values={[
 </TabItem>
 
 <TabItem value="uni-app">
+
+### GroupMemberFilter
+
+| 枚举值名称    | 枚举值 |
+| ------------- | ------ |
+| All           | 0      |
+| Owner         | 1      |
+| Admin         | 2      |
+| Nomal         | 3      |
+| AdminAndNomal | 4      |
+| AdminAndOwner | 5      |
+
+</TabItem>
+
+<TabItem value="React-Native">
+
+### GroupMemberFilter
+
+| 枚举值名称    | 枚举值 |
+| ------------- | ------ |
+| All           | 0      |
+| Owner         | 1      |
+| Admin         | 2      |
+| Nomal         | 3      |
+| AdminAndNomal | 4      |
+| AdminAndOwner | 5      |
+
+</TabItem>
+
+<TabItem value="Unity">
 
 ### GroupMemberFilter
 

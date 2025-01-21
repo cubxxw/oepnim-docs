@@ -1,4 +1,5 @@
 ---
+sidebar_position: 5
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,11 +10,7 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-获取多个会话列表
-
-:::
-
-:::caution 注意
+根据指定会话ID获取多个会话信息。
 
 :::
 
@@ -24,7 +21,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -83,7 +82,7 @@ values={[
 | 名称      | 类型                                                                     | 描述     |
 | --------- | ------------------------------------------------------------------------ | -------- |
 | onSuccess | [OIMConversationInfo](docs/sdks/class/conversation/conversationInfo.mdx) | 成功返回 |
-| onFailure | [OIMFailureCallback](docs/sdks/callback/onError.mdx)                     | 失败返回 |
+| onFailure | OIMFailureCallback                     | 失败返回 |
 
 ### 代码示例
 
@@ -157,8 +156,12 @@ IMSDK.getMultipleConversation(conversationIDList: string[],operationID?: string)
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
 
 IMSDK.getMultipleConversation(['conversationID'])
   .then(({ data }) => {
@@ -201,7 +204,47 @@ IMSDK.asyncApi('getMultipleConversation', operationID: string, conversationIDLis
 import IMSDK from 'openim-uniapp-polyfill';
 
 IMSDK.asyncApi('getMultipleConversation', IMSDK.uuid(), ['conversationID'])
-  .then(({ data }) => {
+  .then((data) => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+</TabItem>
+<TabItem value="React-Native">
+
+### 函数原型
+
+```ts showLineNumbers
+OpenIMSDKRN.getMultipleConversation({
+  conversationIDList: string[], 
+}, operationID: string): Promise<ConversationItem[]>
+```
+
+### 输入参数
+
+| 参数名称           | 参数类型 | 是否必填 | 描述                                                    |
+| ------------------ | -------- | -------- | ------------------------------------------------------- |
+| operationID        | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
+| conversationIDList | string[] | 是       | 会话 ID 列表                                            |
+
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                                         | 描述         |
+| --------------- | -------------------------------------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<[ConversationItem](docs/sdks/class/conversation/conversationInfo.mdx)[]> | 调用成功回调 |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\>                          | 调用失败回调 |
+
+### 代码示例
+
+```js showLineNumbers
+import OpenIMSDKRN from "open-im-sdk-rn";
+
+OpenIMSDKRN.getMultipleConversation(['conversationID'], 'operationID')
+  .then((data) => {
     // 调用成功
   })
   .catch(({ errCode, errMsg }) => {
@@ -211,4 +254,30 @@ IMSDK.asyncApi('getMultipleConversation', IMSDK.uuid(), ['conversationID'])
 
 </TabItem>
 
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+
+public static void GetMultipleConversation(OnBase<List<Conversation>> cb, string[] conversationIdList)
+
+```
+
+### 输入参数
+
+| 参数名称        | 参数类型        | 是否必填 | 描述         |
+| --------------- | ----------------| -------- | ------------ |
+| cb | [OnBase](docs/sdks/callback/onBase.mdx)<List<[Conversation](docs/sdks/class/conversation/conversationInfo.mdx)>>  | 是       | 回调接口     |
+| conversationIdList |  string[]     | 是       | 会话 ID 列表 |
+
+### 代码示例
+
+```C# showLineNumbers
+IMSDK.GetMultipleConversation((list,errCode,errMsg)=>{
+
+},conversationIdList);
+```
+
+</TabItem>
 </Tabs>

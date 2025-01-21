@@ -1,4 +1,5 @@
 ---
+sidebar_position: 4
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,15 +10,21 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-邀请用户进群
+邀请用户进群。
 
 :::
 
 :::caution 注意
 
-（1）如果进群验证选项为 1: 则普通成员进群，会发送进群申请，群主管理员邀请进群；  
-（2）如果进群验证选项为其他值: 则申请需要同意 邀请直接进；  
-（3）被邀请者收到 OnJoinedGroupAdded 回调，其他群成员会收到 OnGroupMemberAdded 回调；
+ 根据调用者身份以及[进群验证选项](../../enum/groupVerification) 确定邀请进群结果。
+
+ 
+
+**相关回调**:    
+[onJoinedGroupAdded](../../callback/onJoinedGroupAdded)   
+[onGroupMemberAdded](../../callback/onGroupMemberAdded)   
+[onGroupApplicationAdded](docs/sdks/callback/onGroupApplicationAdded.mdx)
+
 
 :::
 
@@ -28,7 +35,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -49,15 +58,22 @@ values={[
 
 | 参数名称   | 参数类型      | 是否必填 | 描述     |
 | ---------- | ------------- | -------- | -------- |
-| groupID    | String        | 是       | 群 ID    |
+| groupID    | String        | 是       | 群ID    |
 | reason     | String        | 是       | 邀请信息 |
-| userIDList | List<String\> | 是       | 被邀请人 |
+| userIDList | List<String\> | 是       | 被邀请用户 userID 列表 |
 
 ### 返回结果
 
 | 参数名称 | 参数类型                                                                | 描述     |
 | -------- | ----------------------------------------------------------------------- | -------- |
-| ~        | List<[GroupInviteResult](docs/sdks/class/group/groupInviteResult.mdx)\> | 成功返回 |
+| ~        | List<GroupInviteResult\> | 成功返回 |
+
+#### GroupInviteResult
+
+| 字段名称          | 字段类型            | 描述                 |
+| ----------------- | -------------- | -------------------- |
+| userID        | String               | 用户ID |
+| result | Int | 邀请结果             |
 
 ### 代码示例
 
@@ -89,16 +105,23 @@ values={[
 
 | 参数名称 | 参数类型              | 是否必填 | 描述     |
 | -------- | --------------------- | -------- | -------- |
-| groupID  | NSString              | 是       | 群 ID    |
+| groupID  | NSString              | 是       | 群ID    |
 | reason   | NSSting               | 是       | 邀请信息 |
-| usersID  | NSArray <NSString \*> | 是       | 被邀请人 |
+| usersID  | NSArray <NSString \*> | 是       | 被邀请用户 userID 列表 |
 
 ### 返回结果
 
 | 参数名称  | 参数类型                                                                   | 描述     |
 | --------- | -------------------------------------------------------------------------- | -------- |
-| onSuccess | NSArray< [OIMSimpleResultInfo](docs/sdks/class/friend/resultInfo.mdx) \* > | 成功返回 |
-| onFailure | [OIMFailureCallback](docs/sdks/callback/onError.mdx)                       | 失败返回 |
+| onSuccess | NSArray<OIMSimpleResultInfo \* > | 成功返回 |
+| onFailure | OIMFailureCallback                       | 失败返回 |
+
+#### OIMSimpleResultInfo
+
+| 字段名称          | 字段类型           | 描述                 |
+| ----------------- | -------------------------------- | -------------------- |
+| userID        | NSString   | 用户ID |
+| result | NSInteger | 邀请结果             |
 
 ### 代码示例
 
@@ -127,8 +150,8 @@ public void inviteUserToGroup(OnBase<List<GroupInviteResult>> callBack, String g
 
 | 参数名称 | 参数类型                                                                                                  | 是否必填 | 描述             |
 | -------- | --------------------------------------------------------------------------------------------------------- | -------- | ---------------- |
-| callBack | [OnBase](docs/sdks/callback/onBase.mdx)<List<[GroupInviteResult](docs/sdks/class/friend/resultInfo.mdx)>> | 是       | 回调接口         |
-| groupId  | String                                                                                                    | 是       | 群 ID            |
+| callBack | [OnBase](docs/sdks/callback/onBase.mdx)<List<ResultInfo\>> | 是       | 回调接口         |
+| groupId  | String                                                                                                    | 是       | 群ID            |
 | reason   | Sting                                                                                                     | 是       | 邀请信息         |
 | uidList  | List<String\>                                                                                             | 是       | 被邀请人 ID 集合 |
 
@@ -137,7 +160,7 @@ public void inviteUserToGroup(OnBase<List<GroupInviteResult>> callBack, String g
 ### 代码示例
 
 ```java showLineNumbers
- OpenIMClient.getInstance().groupManager.inviteUserToGroup(new OnBase<List<GroupInviteResult>>() {
+ OpenIMClient.getInstance().groupManager.inviteUserToGroup(new OnBase<List<ResultInfo>>() {
             @Override
             public void onError(int code, String error) {
 
@@ -168,7 +191,7 @@ IMSDK.inviteUserToGroup({
 
 | 参数名称   | 参数类型 | 是否必填 | 描述                   |
 | ---------- | -------- | -------- | ---------------------- |
-| groupID    | string   | 是       | 群 ID                  |
+| groupID    | string   | 是       | 群ID                  |
 | reason     | string   | 是       | 邀请信息               |
 | userIDList | string[] | 是       | 被邀请用户 userID 列表 |
 
@@ -182,8 +205,16 @@ IMSDK.inviteUserToGroup({
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
+
+// use in mini program
+// import { getSDK } from '@openim/client-sdk';
+// const IMSDK = getSDK();
 
 IMSDK.inviteUserToGroup({
   groupID: '',
@@ -217,7 +248,7 @@ IMSDK.asyncApi('inviteUserToGroup', operationID: string, {
 | 参数名称    | 参数类型 | 是否必填 | 描述                                                    |
 | ----------- | -------- | -------- | ------------------------------------------------------- |
 | operationID | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
-| groupID     | string   | 是       | 群 ID                                                   |
+| groupID     | string   | 是       | 群ID                                                   |
 | reason      | string   | 是       | 邀请信息                                                |
 | userIDList  | string[] | 是       | 被邀请用户 userID 列表                                  |
 
@@ -246,6 +277,84 @@ IMSDK.asyncApi('inviteUserToGroup', IMSDK.uuid(), {
   .catch(({ errCode, errMsg }) => {
     // 调用失败
   });
+```
+
+</TabItem>
+<TabItem value="React-Native">
+
+### 函数原型
+
+```ts showLineNumbers
+OpenIMSDKRN.inviteUserToGroup({
+  groupID: string,
+  reason: string,
+  userIDList: string[], 
+}, operationID: string): Promise<void>
+```
+
+### 输入参数
+
+| 参数名称    | 参数类型 | 是否必填 | 描述                                                    |
+| ----------- | -------- | -------- | ------------------------------------------------------- |
+| groupID     | string   | 是       | 群ID                                                   |
+| reason      | string   | 是       | 邀请信息                                                |
+| userIDList  | string[] | 是       | 被邀请用户 userID 列表                                  |
+| operationID | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                | 描述         |
+| --------------- | ------------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<void\>                                          | 调用成功回调 |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\> | 调用失败回调 |
+
+### 代码示例
+
+```js showLineNumbers
+import OpenIMSDKRN from "open-im-sdk-rn";
+
+OpenIMSDKRN.inviteUserToGroup({
+  groupID: '',
+  reason: '',
+  userIDList: ['userID'],
+}, 'operationID')
+  .then(() => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+
+public static void InviteUserToGroup(OnBase<bool> cb, string groupId, string reason, string[] userIdList)
+
+```
+
+### 输入参数
+
+| 参数名称 | 参数类型                                                                                                  | 是否必填 | 描述             |
+| -------- | --------------------------------------------------------------------------------------------------------- | -------- | ---------------- |
+| cb | [OnBase](docs/sdks/callback/onBase.mdx) | 是       | 回调接口         |
+| groupId  | string                                                                                                    | 是       | 群ID            |
+| reason   | sting                                                                                                     | 是       | 邀请信息         |
+| userIdList| string[]                                                                                            | 是       | 被邀请人 ID 集合 |
+
+### 返回结果
+
+### 代码示例
+
+```C# showLineNumbers
+IMSDK.InviteUserToGroup((suc,errCode,errMsg)=>{
+
+},groupId,uidList,reason);
 ```
 
 </TabItem>

@@ -1,4 +1,5 @@
 ---
+sidebar_position: 19
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,14 +10,19 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-把某人踢出群
+把群成员从群组中移除。
 
 :::
 
 :::caution 注意
 
-（1）群主和管理员踢普通成员，群主踢管理员和普通成员；  
-（2）被踢者收到 OnJoinedGroupDeleted 回调，其他群成员收到 OnGroupMemberDeleted 回调；
+（1）群主和群管理员可移除普通成员，群主可移除管理员和普通成员。 
+  
+  
+**相关回调**:    
+[onJoinedGroupDeleted](../../callback/onJoinedGroupDeleted)   
+[onGroupMemberDeleted](../../callback/onGroupMemberDeleted) 
+
 
 :::
 
@@ -27,7 +33,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -48,15 +56,22 @@ values={[
 
 | 参数名称   | 参数类型      | 是否必填 | 描述         |
 | ---------- | ------------- | -------- | ------------ |
-| groupID    | String        | 是       | 群 ID        |
-| reason     | Sting         | 否       | 信息         |
-| userIDList | List<String\> | 是       | 用户 ID 列表 |
+| groupID    | String        | 是       | 群ID        |
+| reason     | Sting         | 否       | 踢出原因         |
+| userIDList | List<String\> | 是       | 踢出用户 userID 列表 |
 
 ### 返回结果
 
 | 参数名称 | 参数类型                                                               | 描述     |
 | -------- | ---------------------------------------------------------------------- | -------- |
-| ~        | List<[GroupInviteResult](docs/sdks/class/group/groupInviteResult.mdx)> | 成功返回 |
+| ~        | GroupInviteResult | 成功返回 |
+
+#### GroupInviteResult
+
+| 字段名称          | 字段类型            | 描述                 |
+| ----------------- | -------------- | -------------------- |
+| userID        | String               | 用户ID |
+| result | Int | 执行结果             |
 
 ### 代码示例
 
@@ -89,16 +104,23 @@ values={[
 
 | 参数名称 | 参数类型             | 是否必填 | 描述         |
 | -------- | -------------------- | -------- | ------------ |
-| groupID  | NSString             | 是       | 群 ID        |
-| reason   | NSSting              | 否       | 信息         |
-| usersID  | NSArray<NSString \*> | 是       | 用户 ID 列表 |
+| groupID  | NSString             | 是       | 群ID        |
+| reason   | NSSting              | 否       | 踢出原因         |
+| usersID  | NSArray<NSString \*> | 是       | 踢出用户 userID 列表 |
 
 ### 返回结果
 
 | 参数名称  | 参数类型                                                     | 描述     |
 | --------- | ------------------------------------------------------------ | -------- |
-| onSuccess | [OIMSimpleResultInfo](docs/sdks/class/friend/resultInfo.mdx) | 成功返回 |
-| onFailure | [OIMFailureCallback](docs/sdks/callback/onError.mdx)         | 失败返回 |
+| onSuccess | OIMSimpleResultInfo | 成功返回 |
+| onFailure | OIMFailureCallback         | 失败返回 |
+
+#### OIMSimpleResultInfo
+
+| 字段名称          | 字段类型           | 描述                 |
+| ----------------- | -------------------------------- | -------------------- |
+| userID        | NSString   | 用户ID |
+| result | NSInteger | 执行结果             |
 
 ### 代码示例
 
@@ -128,8 +150,8 @@ public void kickGroupMember(OnBase<List<GroupInviteResult>> base, String groupId
 
 | 参数名称 | 参数类型                                                                                                  | 是否必填 | 描述         |
 | -------- | --------------------------------------------------------------------------------------------------------- | -------- | ------------ |
-| callBack | [OnBase](docs/sdks/callback/onBase.mdx)<List<[GroupInviteResult](docs/sdks/class/friend/resultInfo.mdx)>> | 是       | 回调接口     |
-| groupId  | String                                                                                                    | 是       | 群 ID        |
+| callBack | [OnBase](docs/sdks/callback/onBase.mdx)<List<ResultInfo\>> | 是       | 回调接口     |
+| groupId  | String                                                                                                    | 是       | 群ID        |
 | reason   | Sting                                                                                                     | 否       | 信息         |
 | uidList  | List<String\>                                                                                             | 是       | 用户 ID 列表 |
 
@@ -138,7 +160,7 @@ public void kickGroupMember(OnBase<List<GroupInviteResult>> base, String groupId
 ### 代码示例
 
 ```java showLineNumbers
-OpenIMClient.getInstance().groupManager.kickGroupMember(new OnBase<List<GroupInviteResult>>() {
+OpenIMClient.getInstance().groupManager.kickGroupMember(new OnBase<List<ResultInfo>>() {
             @Override
             public void onError(int code, String error) {
 
@@ -150,6 +172,8 @@ OpenIMClient.getInstance().groupManager.kickGroupMember(new OnBase<List<GroupInv
             }
         },  groupId, uidList,  reason)
 ```
+
+
 
 </TabItem>
 
@@ -169,7 +193,7 @@ IMSDK.kickGroupMember({
 
 | 参数名称   | 参数类型 | 是否必填 | 描述             |
 | ---------- | -------- | -------- | ---------------- |
-| groupID    | string   | 是       | 群 ID            |
+| groupID    | string   | 是       | 群ID            |
 | reason     | string   | 是       | 踢出原因         |
 | userIDList | string[] | 是       | 提出用户 ID 列表 |
 
@@ -183,8 +207,16 @@ IMSDK.kickGroupMember({
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
+
+// use in mini program
+// import { getSDK } from '@openim/client-sdk';
+// const IMSDK = getSDK();
 
 IMSDK.kickGroupMember({
   groupID: '',
@@ -218,7 +250,7 @@ IMSDK.asyncApi('kickGroupMember', operationID: string, {
 | 参数名称    | 参数类型 | 是否必填 | 描述                                                    |
 | ----------- | -------- | -------- | ------------------------------------------------------- |
 | operationID | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
-| groupID     | string   | 是       | 群 ID                                                   |
+| groupID     | string   | 是       | 群ID                                                   |
 | reason      | string   | 是       | 踢出原因                                                |
 | userIDList  | string[] | 是       | 提出用户 ID 列表                                        |
 
@@ -249,6 +281,83 @@ IMSDK.asyncApi('kickGroupMember', IMSDK.uuid(), {
   });
 ```
 
+</TabItem>
+<TabItem value="React-Native">
+
+### 函数原型
+
+```ts showLineNumbers
+OpenIMSDKRN.kickGroupMember({
+  groupID: string,
+  reason: string,
+  userIDList: string[],
+}, operationID: string): Promise<void>
+```
+
+### 输入参数
+
+| 参数名称    | 参数类型 | 是否必填 | 描述                                                    |
+| ----------- | -------- | -------- | ------------------------------------------------------- |
+| groupID     | string   | 是       | 群ID                                                   |
+| reason      | string   | 是       | 踢出原因                                                |
+| userIDList  | string[] | 是       | 提出用户 ID 列表                                        |
+| operationID | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                | 描述         |
+| --------------- | ------------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<void\>                                          | 调用成功回调 |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\> | 调用失败回调 |
+
+### 代码示例
+
+```js showLineNumbers
+import OpenIMSDKRN from "open-im-sdk-rn";
+
+OpenIMSDKRN.kickGroupMember({
+  groupID: '',
+  reason: '',
+  userIDList: ['userID'],
+}, 'operationID')
+  .then(() => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+
+public static void KickGroupMember(OnBase<bool> cb, string groupId, string reason, string[] userIdList)
+
+```
+
+### 输入参数
+
+| 参数名称 | 参数类型                                                                                                  | 是否必填 | 描述         |
+| -------- | --------------------------------------------------------------------------------------------------------- | -------- | ------------ |
+| cb | [OnBase](docs/sdks/callback/onBase.mdx) | 是       | 回调接口     |
+| groupId  | string                                                                                                    | 是       | 群ID        |
+| reason   | string | 否       | 信息         |
+| userIdList |  string[]                                                                                            | 是       | 用户 ID 列表 |
+
+### 返回结果
+
+### 代码示例
+
+```C# showLineNumbers
+IMSDK.KickGroupMember((suc,errCode,errMsg)=>{
+
+},  groupId, uidList,  reason)
+```
 </TabItem>
 
 </Tabs>

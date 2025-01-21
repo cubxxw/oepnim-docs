@@ -1,4 +1,5 @@
 ---
+sidebar_position: 6
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,14 +10,14 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-在 groupID 或群名称字段中，通过关键词搜索已加入的群信息
+通过关键词搜索已加入的群组。
 
 :::
 
 :::caution 注意
 
-（1）至少需指定一个搜索字段（域）；  
-（2）多个域之间是或的关系；
+（1）至少需指定一个搜索域；    
+（2）多个域之间是或的关系。  
 
 :::
 
@@ -27,7 +28,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -48,9 +51,9 @@ values={[
 
 | 参数名称          | 参数类型      | 是否必填 | 描述       |
 | ----------------- | ------------- | -------- | ---------- |
-| keywordList       | List<String\> | 是       | 关键字     |
-| isSearchGroupID   | bool          | 是       | 检索群 id  |
-| isSearchGroupName | bool          | 是       | 检索群昵称 |
+| keywordList       | List<String\> | 是       | 搜索关键词，目前仅支持一个关键词搜索，不能为空      |
+| isSearchGroupID   | bool          | 是       | 是否以关键词搜索群ID  |
+| isSearchGroupName | bool          | 是       | 是否以关键词搜索群名字 |
 
 ### 返回结果
 
@@ -85,16 +88,18 @@ values={[
 
 ### 输入参数
 
-| 参数名称    | 参数类型                                                          | 是否必填 | 描述     |
-| ----------- | ----------------------------------------------------------------- | -------- | -------- |
-| searchParam | [OIMSearchGroupParam](docs/sdks/class/group/searchGroupParam.mdx) | 是       | 查询参数 |
+| 参数名称          | 参数类型                | 是否必填 | 描述                                                          |
+| ----------------- | --------------------- | - -|------------------------------------------------------------- |
+| OIMSearchGroupParam.keywordList       | NSArray< NSString \*> | 是  |搜索关键词，目前仅支持一个关键词搜索，不能为空                |
+| OIMSearchGroupParam.isSearchGroupID   | BOOL                  | 否 |是否以关键词搜索群ID(注：两个不可以同时为 false)，默认 false |
+| OIMSearchGroupParam.isSearchGroupName | BOOL                  | 否 |是否以关键词搜索群名字，默认 false                            |
 
 ### 返回结果
 
 | 参数名称  | 参数类型                                                         | 描述     |
 | --------- | ---------------------------------------------------------------- | -------- |
 | onSuccess | NSArray< [OIMGroupInfo](docs/sdks/class/group/groupInfo.mdx) \*> | 成功返回 |
-| onFailure | [OIMFailureCallback](docs/sdks/callback/onError.mdx)             | 失败返回 |
+| onFailure | OIMFailureCallback             | 失败返回 |
 
 ### 代码示例
 
@@ -127,7 +132,7 @@ param.keywordList = @[];
 | ----------------- | ----------------------------------------------------------------------------------------------- | -------- | ---------- |
 | callBack          | [OnBase](docs/sdks/callback/onBase.mdx)<List<[GroupInfo](docs/sdks/class/group/groupInfo.mdx)>> | 是       | 回调接口   |
 | keywordList       | List<String\>                                                                                   | 是       | 关键字     |
-| isSearchGroupID   | Boolean                                                                                         | 是       | 检索群 id  |
+| isSearchGroupID   | Boolean                                                                                         | 是       | 检索群ID  |
 | isSearchGroupName | Boolean                                                                                         | 是       | 检索群昵称 |
 
 ### 返回结果
@@ -167,7 +172,7 @@ IMSDK.searchGroups({
 | 参数名称          | 参数类型 | 是否必填 | 描述                                           |
 | ----------------- | -------- | -------- | ---------------------------------------------- |
 | keywordList       | string[] | 是       | 搜索关键词，目前仅支持一个关键词搜索，不能为空 |
-| isSearchGroupID   | boolean  | 是       | 是否以关键词搜索群 ID                          |
+| isSearchGroupID   | boolean  | 是       | 是否以关键词搜索群ID                          |
 | isSearchGroupName | boolean  | 是       | 是否以关键词搜索群名称                         |
 
 ### 返回结果
@@ -180,8 +185,12 @@ IMSDK.searchGroups({
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
 
 IMSDK.searchGroups({
   keywordList: ['nickname'];
@@ -216,7 +225,7 @@ IMSDK.asyncApi('searchGroups', operationID: string, {
 | ----------------- | -------- | -------- | ------------------------------------------------------- |
 | operationID       | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
 | keywordList       | string[] | 是       | 搜索关键词，目前仅支持一个关键词搜索，不能为空          |
-| isSearchGroupID   | boolean  | 是       | 是否以关键词搜索群 ID                                   |
+| isSearchGroupID   | boolean  | 是       | 是否以关键词搜索群ID                                   |
 | isSearchGroupName | boolean  | 是       | 是否以关键词搜索群名称                                  |
 
 ### 返回结果
@@ -239,12 +248,93 @@ IMSDK.asyncApi('searchGroups', IMSDK.uuid(), {
   isSearchNickname: true,
   isSearchRemark: true,
 })
-  .then(({data}) => {
+  .then((data) => {
     // 调用成功
   })
   .catch(({ errCode, errMsg }) => {
     // 调用失败
   });
+```
+
+</TabItem>
+<TabItem value="React-Native">
+
+### 函数原型
+
+```ts showLineNumbers
+OpenIMSDKRN.searchGroups({
+  keywordList: string[];
+  isSearchGroupID: boolean;
+  isSearchGroupName: boolean;
+}, operationID: string): Promise<GroupItem[]>
+```
+
+### 输入参数
+
+| 参数名称          | 参数类型 | 是否必填 | 描述                                                    |
+| ----------------- | -------- | -------- | ------------------------------------------------------- |
+| keywordList       | string[] | 是       | 搜索关键词，目前仅支持一个关键词搜索，不能为空          |
+| isSearchGroupID   | boolean  | 是       | 是否以关键词搜索群ID                                   |
+| isSearchGroupName | boolean  | 是       | 是否以关键词搜索群名称                                  |
+| operationID       | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                     | 描述                 |
+| --------------- | ------------------------------------------------------------ | -------------------- |
+| Promise.then()  | Promise<[GroupItem](docs/sdks/class/group/groupInfo.mdx)[]\> | 搜索到的群信息列表 |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\>      | 调用失败回调         |
+
+### 代码示例
+
+```js showLineNumbers
+import OpenIMSDKRN from "open-im-sdk-rn";
+
+OpenIMSDKRN.searchGroups({
+  keywordList: ['nickname'];
+  isSearchUserID: false,
+  isSearchNickname: true,
+  isSearchRemark: true,
+}, 'operationID')
+  .then((data) => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+
+public static void SearchGroups(OnBase<List<GroupInfo>> cb, SearchGroupsParam searchParam)
+
+```
+
+### 输入参数
+
+| 参数名称          | 参数类型                                                                                        | 是否必填 | 描述       |
+| ----------------- | ----------------------------------------------------------------------------------------------- | -------- | ---------- |
+| cb |[OnBase](docs/sdks/callback/onBase.mdx)<List<[GroupInfo](docs/sdks/class/group/groupInfo.mdx)>> | 是       | 回调   |
+| searchParam | [SearchGroupsParam](docs/sdks/class/group/SearchGroupsParam.mdx)                                                            | 是       | 搜索参数    |
+
+### 返回结果
+
+### 代码示例
+
+```C# showLineNumbers
+IMSDK.SearchGroups((list,errCode,errMsg)=>{
+
+},new SearchGroupsParam(){
+    KeywordList = {},
+    IsSearchGroupID = true,
+    IsSearchGroupName = false 
+} );
 ```
 
 </TabItem>

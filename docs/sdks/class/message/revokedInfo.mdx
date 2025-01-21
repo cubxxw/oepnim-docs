@@ -10,7 +10,7 @@ toc_max_heading_level: 2
 
 :::info
 
-撤回信息
+消息撤回详情。
 
 :::
 
@@ -21,7 +21,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -33,13 +35,13 @@ values={[
 | --------------------------- | -------- | -------------- |
 | revokerID                   | String   | 撤回者 ID      |
 | revokerNickname             | String   | 撤回者昵称     |
-| revokerRole                 | int      | 撤回者群角色   |
-| clientMsgID                 | String   | 消息 id        |
+| revokerRole                 | [int](docs/sdks/enum/roleLevel.mdx)       | 撤回者群角色   |
+| clientMsgID                 | String   | 消息 ID        |
 | revokeTime                  | int      | 撤回时间       |
 | sourceMessageSendTime       | int      | 消息发送时间   |
 | sourceMessageSendID         | String   | 消息发送者     |
 | sourceMessageSenderNickname | String   | 消息发送者昵称 |
-| sessionType                 | int      | 会话类型       |
+| sessionType                 | [int](docs/sdks/enum/conversationType.mdx)      | 会话类型       |
 
 </TabItem>
 
@@ -69,13 +71,13 @@ values={[
 | --------------------------- | -------- | -------------- |
 | revokerID                   | String   | 撤回者 ID      |
 | revokerNickname             | String   | 撤回者昵称     |
-| revokerRole                 | int      | 撤回者群角色   |
-| clientMsgID                 | String   | 消息 id        |
+| revokerRole                 | int      | [RevokerRole](docs/sdks/enum/roleLevel.mdx) 撤回者群角色   |
+| clientMsgID                 | String   | 消息 ID        |
 | revokeTime                  | int      | 撤回时间       |
 | sourceMessageSendTime       | int      | 消息发送时间   |
 | sourceMessageSendID         | String   | 消息发送者     |
 | sourceMessageSenderNickname | String   | 消息发送者昵称 |
-| sessionType                 | int      | 会话类型       |
+| sessionType                 | int      | [ConversationType](docs/sdks/enum/conversationType.mdx) 会话类型       |
 
 </TabItem>
 
@@ -88,7 +90,7 @@ values={[
 | revokerID                   | string   | 撤回者 ID      |
 | revokerNickname             | string   | 撤回者昵称     |
 | revokerRole                 | number   | 撤回者群角色   |
-| clientMsgID                 | string   | 消息 id        |
+| clientMsgID                 | string   | 消息 ID        |
 | revokeTime                  | number   | 撤回时间       |
 | sourceMessageSendTime       | number   | 消息发送时间   |
 | sourceMessageSendID         | string   | 消息发送者     |
@@ -106,7 +108,7 @@ values={[
 | revokerID                   | string   | 撤回者 ID      |
 | revokerNickname             | string   | 撤回者昵称     |
 | revokerRole                 | number   | 撤回者群角色   |
-| clientMsgID                 | string   | 消息 id        |
+| clientMsgID                 | string   | 消息 ID        |
 | revokeTime                  | number   | 撤回时间       |
 | sourceMessageSendTime       | number   | 消息发送时间   |
 | sourceMessageSendID         | string   | 消息发送者     |
@@ -115,4 +117,39 @@ values={[
 
 </TabItem>
 
+<TabItem value="React-Native">
+
+### RevokedInfo
+
+| 字段名称                    | 字段类型 | 描述           |
+| --------------------------- | -------- | -------------- |
+| revokerID                   | string   | 撤回者 ID      |
+| revokerNickname             | string   | 撤回者昵称     |
+| revokerRole                 | number   | 撤回者群角色   |
+| clientMsgID                 | string   | 消息 ID        |
+| revokeTime                  | number   | 撤回时间       |
+| sourceMessageSendTime       | number   | 消息发送时间   |
+| sourceMessageSendID         | string   | 消息发送者     |
+| sourceMessageSenderNickname | string   | 消息发送者昵称 |
+| sessionType                 | number   | 会话类型       |
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### MessageRevoked
+
+| 字段名称                    | 字段类型 | 描述           |
+| --------------------------- | -------- | -------------- |
+| RevokerID                   | string   | 撤回者 ID      |
+| RevokerNickname             | string   | 撤回者昵称     |
+| RevokerRole                 | [int](docs/sdks/enum/roleLevel.mdx)       | 撤回者群角色   |
+| ClientMsgID                 | string   | 消息 ID        |
+| RevokeTime                  | int      | 撤回时间       |
+| SourceMessageSendTime       | int      | 消息发送时间   |
+| SourceMessageSendID         | string   | 消息发送者     |
+| SourceMessageSenderNickname | string   | 消息发送者昵称 |
+| SessionType                 | [int](docs/sdks/enum/conversationType.mdx)      | 会话类型       |
+
+</TabItem>
 </Tabs>

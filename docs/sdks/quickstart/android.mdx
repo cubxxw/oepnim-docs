@@ -1,12 +1,11 @@
 ---
 title: Android
 hide_title: true
-sidebar_position: 1
+sidebar_position: 2
 ---
 
-## 使用 Demo
-
-[仓库地址](https://github.com/OpenIMSDK/Open-IM-Android-Demo)
+## 🚀使用 Demo
+我们强烈建议您首先运行我们为您准备的框架相关的示例 [DEMO](https://github.com/openimsdk/Open-IM-Android-Demo) 。这不仅可以让您直观体验 OpenIM SDK 的功能，还将帮助您在实际集成过程中迅速定位和解决问题。
 
 ## 集成步骤
 
@@ -23,16 +22,15 @@ sidebar_position: 1
 ### 3. 初始化
 
 ```java
- OpenIMClient.getInstance().initSDK(
-            application, //Application
-            Platform.ANDROID, // 当前平台
+InitConfig initConfig=new InitConfig(
             Constant.getImApiUrl(),//SDK api地址
             Constant.getImWsUrl(),//SDK WebSocket地址
             getStorageDir(),//SDK数据库存储目录
-            6,//日志打印等级 1不打印
-            true,//日志输出到控制台
-            null, //日志输出到文件的目录
-            false,//日志输出到文件
+            );
+
+ OpenIMClient.getInstance().initSDK(
+            application, //Application
+            initConfig,//InitConfig
             new OnConnListener() {
                 @Override
                 public void onConnectFailed(long code, String error) {
@@ -78,7 +76,7 @@ sidebar_position: 1
    // 群组关系发生改变监听
    OpenIMClient.getInstance().groupManager.setOnGroupListener(new OnGroupListener() {}
    // 信令监听
-   OpenIMClient.getInstance().signalingManager.setSignalingListener(new OnSignalingListener()
+   OpenIMClient.getInstance().signalingManager.setSignalingListener(new OnSignalingListener() {}
 ```
 
 ### 5. 登录

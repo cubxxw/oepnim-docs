@@ -1,4 +1,5 @@
 ---
+sidebar_position: 16
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,14 +10,16 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-修改群成员信息
+修改群成员信息。
 
 :::
 
 :::caution 注意
 
-群主可以修改管理员和普通成员信息；管理员可以修改普通成员信息；  
-群成员会收到 OnGroupMemberInfoChanged 回调；
+群主可以修改管理员和普通成员信息；管理员可以修改普通成员信息；
+
+**相关回调**:  
+[onGroupMemberInfoChanged](docs/sdks/callback/onGroupMemberInfoChanged.mdx)
 
 :::
 
@@ -26,8 +29,10 @@ values={[
 { label: 'iOS', value: 'iOS', },
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
-{ label: 'Uniapp', value: 'Uniapp', },
-{ label: 'Web', value: 'Web', },
+{ label: 'uni-app', value: 'uni-app', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -37,20 +42,16 @@ values={[
 
 ```dart showLineNumbers
   Future<dynamic> setGroupMemberInfo({
-    required String groupID,
-    required String userID,
-    String? ex,
+    required SetGroupMembersInfo groupMembersInfo,
     String? operationID,
   })
 ```
 
 ### 输入参数
 
-| 参数名称 | 参数类型 | 是否必填 | 描述         |
-| -------- | -------- | -------- | ------------ |
-| groupID  | String   | 是       | 群 ID        |
-| userID   | String   | 是       | 用户 id      |
-| ex       | String   | 是       | 成员扩展信息 |
+| 参数名称         | 参数类型                                                        | 是否必填 | 描述     |
+| ---------------- | --------------------------------------------------------------- | -------- | -------- |
+| groupMembersInfo | [SetGroupMembersInfo](docs/sdks/class/group/SetGroupMemberInfo.mdx) | 是       | 成员信息 |
 
 ### 返回结果
 
@@ -62,12 +63,9 @@ values={[
 
 ```dart showLineNumbers
     await OpenIM.iMManager.groupManager.setGroupMemberInfo(
-      groupID: '',
-      userID: '',
-      ex: jsonEncode({'englishName':'tom'}),
+      groupMembersInfo: ,
     );
     // todo
-  }
 ```
 
 </TabItem>
@@ -77,24 +75,65 @@ values={[
 ### 函数原型
 
 ```swift showLineNumbers
-
+- (void)setGroupMemberInfo:(OIMSetGroupMembersInfo *)groupMembersInfo
+                 onSuccess:(nullable OIMSuccessCallback)onSuccess
+                 onFailure:(nullable OIMFailureCallback)onFailure;
 ```
 
 ### 输入参数
 
+| 参数名称         | 参数类型                                                        | 是否必填 | 描述     |
+| ---------------- | --------------------------------------------------------------- | -------- | -------- |
+| groupMembersInfo | [OIMSetGroupMembersInfo](docs/sdks/class/group/SetGroupMemberInfo.mdx) | 是       | 成员信息 |
+
 ### 返回结果
+
+| 参数名称  | 参数类型           | 描述     |
+| --------- | ------------------ | -------- |
+| onSuccess | OIMSuccessCallback | 成功返回 |
+| onFailure | OIMFailureCallback | 失败返回 |
 
 ### 代码示例
 
 ```swift showLineNumbers
-
+[OIMManager.manager setGroupMemberInfo:
+                                 onSuccess:^(NSString * _Nullable data) {
+} onFailure:^(NSInteger code, NSString * _Nullable msg) {
+}];
 ```
 
 </TabItem>
 
 <TabItem value="Android">
 
-### 参数详解
+### 函数原型
+
+```java showLineNumbers
+ public void setGroupMemberInfo(SetGroupMemberInfo info,OnBase<String> callBack)
+```
+
+### 输入参数
+
+| 参数名称         | 参数类型                                                        | 是否必填 | 描述     |
+| ---------------- | --------------------------------------------------------------- | -------- | -------- |
+| groupMembersInfo | [SetGroupMemberInfo](docs/sdks/class/group/SetGroupMemberInfo.mdx) | 是       | 成员信息 |
+
+### 返回结果
+
+### 代码示例
+
+```java showLineNumbers
+OpenIMClient.getInstance().groupManager.setGroupMemberInfo(groupInfo, new OnBase<String>() {
+    @Override
+    public void onError(int code, String error) {
+      // todo: 处理错误信息
+    }
+    @Override
+    public void onSuccess(String data) {
+      // todo: 请求成功
+    }
+});
+```
 
 </TabItem>
 
@@ -106,17 +145,23 @@ values={[
 IMSDK.setGroupMemberInfo({
   groupID: string;
   userID: string;
-  ex: string;
+  nickname?: string;
+  faceURL?: string;
+  roleLevel?: GroupMemberRole;
+  ex?: string;
 }, operationID?: string): Promise<WsResponse>
 ```
 
 ### 输入参数
 
-| 参数名称 | 参数类型 | 是否必填 | 描述           |
-| -------- | -------- | -------- | -------------- |
-| groupID  | string   | 是       | 群 ID          |
-| userID   | string   | 是       | 用户 id        |
-| ex       | string   | 是       | 群成员扩展信息 |
+| 参数名称  | 参数类型 | 是否必填 | 描述           |
+| --------- | -------- | -------- | -------------- |
+| groupID   | string   | 是       | 群ID        |
+| userID    | string   | 是       | 用户 ID        |
+| nickname  | string   | 否       | 群成员昵称     |
+| faceURL   | string   | 否       | 群成员头像URL     |
+| roleLevel | string   | 否       | 群成员角色     |
+| ex        | string   | 否       | 群成员扩展信息 |
 
 ### 返回结果
 
@@ -128,13 +173,21 @@ IMSDK.setGroupMemberInfo({
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
+
+// use in mini program
+// import { getSDK } from '@openim/client-sdk';
+// const IMSDK = getSDK();
 
 IMSDK.setGroupMemberInfo({
   groupID: '',
   userID: '',
-  ex: '',
+  nickname: 'new name',
 })
   .then(() => {
     // 调用成功
@@ -146,7 +199,7 @@ IMSDK.setGroupMemberInfo({
 
 </TabItem>
 
-<TabItem value="Uniapp">
+<TabItem value="uni-app">
 
 ### 函数原型
 
@@ -154,7 +207,10 @@ IMSDK.setGroupMemberInfo({
 IMSDK.asyncApi('setGroupMemberInfo', operationID: string, {
   groupID: string;
   userID: string;
-  ex: string;
+  nickname?: string;
+  faceURL?: string;
+  roleLevel?: GroupMemberRole;
+  ex?: string;
 }): Promise<void>
 ```
 
@@ -163,9 +219,12 @@ IMSDK.asyncApi('setGroupMemberInfo', operationID: string, {
 | 参数名称    | 参数类型 | 是否必填 | 描述                                                    |
 | ----------- | -------- | -------- | ------------------------------------------------------- |
 | operationID | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
-| groupID     | string   | 是       | 群 ID                                                   |
-| userID      | string   | 是       | 用户 id                                                 |
-| ex          | string   | 是       | 群成员扩展信息                                          |
+| groupID     | string   | 是       | 群ID                                                 |
+| userID      | string   | 是       | 用户 ID                                                 |
+| nickname    | string   | 否       | 群成员昵称                                              |
+| faceURL     | string   | 否       | 群成员头像URL                                              |
+| roleLevel   | string   | 否       | 群成员角色                                              |
+| ex          | string   | 否       | 群成员扩展信息                                          |
 
 ### 返回结果
 
@@ -184,7 +243,7 @@ import IMSDK from 'openim-uniapp-polyfill';
 IMSDK.asyncApi('setGroupMemberInfo', IMSDK.uuid(), {
   groupID: '',
   userID: '',
-  ex: '',
+  nickname: 'new name',
 })
   .then(() => {
     // 调用成功
@@ -195,5 +254,91 @@ IMSDK.asyncApi('setGroupMemberInfo', IMSDK.uuid(), {
 ```
 
 </TabItem>
+<TabItem value="React-Native">
 
+### 函数原型
+
+```ts showLineNumbers
+OpenIMSDKRN.setGroupMemberInfo({
+  groupID: string;
+  userID: string;
+  nickname?: string;
+  faceURL?: string;
+  roleLevel?: GroupMemberRole;
+  ex?: string;
+}, operationID: string): Promise<void>
+```
+
+### 输入参数
+
+| 参数名称    | 参数类型 | 是否必填 | 描述                                                    |
+| ----------- | -------- | -------- | ------------------------------------------------------- |
+| groupID     | string   | 是       | 群ID                                                 |
+| userID      | string   | 是       | 用户 ID                                                 |
+| nickname    | string   | 否       | 群成员昵称                                              |
+| faceURL     | string   | 否       | 群成员头像URL                                              |
+| roleLevel   | string   | 否       | 群成员角色                                              |
+| ex          | string   | 否       | 群成员扩展信息                                          |
+| operationID | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                | 描述         |
+| --------------- | ------------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<void\>                                          | 调用成功回调 |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\> | 调用失败回调 |
+
+### 代码示例
+
+```js showLineNumbers
+import OpenIMSDKRN from "open-im-sdk-rn";
+
+OpenIMSDKRN.setGroupMemberInfo({
+  groupID: '',
+  userID: '',
+  nickname: 'new name',
+}, 'operationID')
+  .then(() => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+
+public static void SetGroupMemberInfo(OnBase<bool> cb, SetGroupMemberInfo groupMemberInfo)
+
+```
+
+### 输入参数
+
+| 参数名称 | 参数类型 | 是否必填 | 描述         |
+| -------- | -------- | -------- | ------------ |
+| cb | [OnBase](docs/sdks/callback/onBase.mdx) | 是       | 回调    |
+| groupMemberInfo| [SetGroupMemberInfo](docs/sdks/class/group/SetGroupMemberInfo.mdx) | 是       |  成员设置
+
+
+### 返回结果
+
+### 代码示例
+
+```C# showLineNumbers
+
+IMSDK.SetGroupMemberInfo((suc,errCode,errMsg)=>{
+
+},new SetGroupMemberInfo(){
+
+});
+
+```
+
+</TabItem>
 </Tabs>

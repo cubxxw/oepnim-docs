@@ -1,12 +1,11 @@
 ---
 title: iOS
 hide_title: true
-sidebar_position: 2
+sidebar_position: 1
 ---
 
-## 使用 Demo
-
-[仓库地址](https://github.com/OpenIMSDK/Open-IM-iOS-Demo)
+## 🚀使用 Demo
+我们强烈建议您首先运行我们为您准备的框架相关的示例 [DEMO](https://github.com/OpenIM SDK/Open-IM-iOS-Demo)。这不仅可以让您直观体验 OpenIM SDK 的功能，还将帮助您在实际集成过程中迅速定位和解决问题。
 
 ## 集成步骤
 
@@ -16,7 +15,7 @@ sidebar_position: 2
 pod 'OpenIMSDK', '~>3.0.0'
 ```
 
-SDK 版本参考：https://github.com/OpenIMSDK/Open-IM-SDK-iOS.git
+SDK 版本参考：https://github.com/openimsdk/Open-IM-SDK-iOS.git
 
 ### 2. 引入模块
 
@@ -49,7 +48,81 @@ BOOL success = [OIMManager.manager initSDKWithConfig:config
 
 ```
 
-### 4. 登录
+### 4. 设置监听器
+
+#### 方式一
+```swift
+// 会话相关监听
+- (void)setConversationListenerWithOnSyncServerStart:(OIMVoidCallback)onSyncServerStart
+                                  onSyncServerFinish:(OIMVoidCallback)onSyncServerFinish
+                                  onSyncServerFailed:(OIMVoidCallback)onSyncServerFailed
+                               onConversationChanged:(OIMConversationsInfoCallback)onConversationChanged
+                                   onNewConversation:(OIMConversationsInfoCallback)onNewConversation
+                    onTotalUnreadMessageCountChanged:(OIMNumberCallback)onTotalUnreadMessageCountChanged;
+
+// 好友关系链相关监听
+- (void)setFriendListenerWithOnBlackAdded:(OIMBlackInfoCallback)onBlackAdded
+                           onBlackDeleted:(OIMBlackInfoCallback)onBlackDeleted
+              onFriendApplicationAccepted:(OIMFriendApplicationCallback)onFriendApplicationAccepted
+                 onFriendApplicationAdded:(OIMFriendApplicationCallback)onFriendApplicationAdded
+               onFriendApplicationDeleted:(OIMFriendApplicationCallback)onFriendApplicationDeleted
+              onFriendApplicationRejected:(OIMFriendApplicationCallback)onFriendApplicationRejected
+                      onFriendInfoChanged:(OIMFriendInfoCallback)onFriendInfoChanged
+                            onFriendAdded:(OIMFriendInfoCallback)onFriendAdded
+                          onFriendDeleted:(OIMFriendInfoCallback)onFriendDeleted;
+
+// 群组相关监听
+- (void)setGroupListenerWithOnGroupInfoChanged:(OIMGroupInfoCallback)onGroupInfoChanged
+                            onJoinedGroupAdded:(OIMGroupInfoCallback)onJoinedGroupAdded
+                          onJoinedGroupDeleted:(OIMGroupInfoCallback)onJoinedGroupDeleted
+                            onGroupMemberAdded:(OIMGroupMemberInfoCallback)onGroupMemberAdded
+                          onGroupMemberDeleted:(OIMGroupMemberInfoCallback)onGroupMemberDeleted
+                      onGroupMemberInfoChanged:(OIMGroupMemberInfoCallback)onGroupMemberInfoChanged
+                       onGroupApplicationAdded:(OIMGroupApplicationCallback)onGroupApplicationAdded
+                     onGroupApplicationDeleted:(OIMGroupApplicationCallback)onGroupApplicationDeleted
+                    onGroupApplicationAccepted:(OIMGroupApplicationCallback)onGroupApplicationAccepted
+                    onGroupApplicationRejected:(OIMGroupApplicationCallback)onGroupApplicationRejected
+                              onGroupDismissed:(nullable OIMGroupInfoCallback)onGroupDismissed;
+
+// 消息相关监听
+- (void)setAdvancedMsgListenerWithOnRecvMessageRevoked:(OIMRevokedCallback)onRecvMessageRevoked
+                                  onRecvC2CReadReceipt:(OIMReceiptCallback)onRecvC2CReadReceipt
+                                onRecvGroupReadReceipt:(OIMReceiptCallback)onRecvGroupReadReceipt
+                                      onRecvNewMessage:(OIMMessageInfoCallback)onRecvNewMessage;
+
+// 登录用户相关监听
+- (void)setSelfUserInfoUpdateListener:(OIMUserInfoCallback)onUserInfoUpdate;
+
+// 用户状态相关监听
+- (void)setUserListenerWithUserInfoUpdate:(nullable OIMUserInfoCallback)onUserInfoUpdate
+                      onUserStatusChanged:(nullable OIMUserStatusInfoCallback)onUserStatusChanged;
+
+// 自定义业务相关监听
+- (void)setRecvCustomBusinessMessageListener:(OIMObjectCallback)onRecvCustomBusinessMessage;
+    
+```
+
+#### 方式二
+
+```swift
+
+// 会话相关监听
+- (void)addConversationListener:(id<OIMConversationListener>)listener;
+- (void)addIMSDKListener:(id<OIMSDKListener>)listener;
+// 好友关系链相关监听
+- (void)addFriendListener:(id<OIMFriendshipListener>)listener;
+// 群组相关监听
+- (void)addGroupListener:(id<OIMGroupListener>)listener;
+// 消息相关监听
+- (void)addAdvancedMsgListener:(id<OIMAdvancedMsgListener>)listener;
+// 用户相关监听
+- (void)addUserListener:(id<OIMUserListener>)listener;
+// 自定义业务相关监听
+- (void)addCustomBusinessListener:(id<OIMCustomBusinessListener>)listener;
+
+```
+
+### 5. 登录
 
 ```swift
 [OIMManager.manager login:@""

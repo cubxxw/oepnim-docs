@@ -4,8 +4,86 @@ hide_title: true
 sidebar_position: 4
 ---
 
-:::tip
+## 使用 Demo 🚀
+我们强烈建议您首先运行我们为您准备的框架相关的示例 [DEMO](https://github.com/openimsdk/openim-reactnative-demo) 。这不仅可以让您直观体验 OpenIMSDK 的功能，还将帮助您在实际集成过程中迅速定位和解决问题。
 
-Coming soon...
+## 注意事项 ❗️
 
-:::
+-  `open-im-sdk-rn@3.5.1` 包含了重大的破坏性更新。如果您需要升级，请检查传入参数和返回数据。
+
+-  与其他SDK不同，`React Native SDK` **operationID** 不是可选的，而是必填的。（operationID 用于后端日志查询）
+
+## 集成步骤 ( React Native CLI )
+
+### 1. 添加依赖
+
+```sh
+yarn add open-im-sdk-rn
+```
+
+### 2. 初始化 SDK
+
+```ts
+import OpenIMSDKRN from 'open-im-sdk-rn';
+import RNFS from 'react-native-fs';
+
+RNFS.mkdir(RNFS.DocumentDirectoryPath + '/tmp');
+
+OpenIMSDKRN.initSDK({
+  platformID: 2,  // 1: ios, 2: android
+  apiAddr: 'http://your-server-ip:10002',
+  wsAddr: 'ws://your-server-ip:10001',
+  dataDir: RNFS.DocumentDirectoryPath + '/tmp',
+  logLevel: 5,
+  isLogStandardOutput: true,
+}, 'opid');
+```
+
+### 3. 登录、设置监听
+
+```ts
+import OpenIMSDKRN, { OpenIMEmitter } from 'open-im-sdk-rn';
+
+OpenIMSDKRN.login({
+  userID: 'IM user ID',
+  token: 'IM user token',
+}, 'opid');
+
+OpenIMEmitter.addListener('onConnecting', () => {
+  console.log('onConnecting');
+});
+
+OpenIMEmitter.addListener('onConnectSuccess', () => {
+  console.log('onConnectSuccess');
+});
+
+OpenIMEmitter.addListener('onConnectFailed', ({ errCode, errMsg }) => {
+  console.log('onConnectFailed', errCode, errMsg);
+});
+```
+
+### 4. 收发消息
+
+```ts
+import OpenIMSDKRN, { OpenIMEmitter } from 'open-im-sdk-rn';
+import type { MessageItem } from 'open-im-sdk-rn';
+
+OpenIMEmitter.addListener('onRecvNewMessages', (data: MessageItem[]) => {
+  console.log('onRecvNewMessages', data);
+});
+
+const message = await OpenIMSDKRN.createTextMessage('hello openim', 'opid');
+
+OpenIMSDKRN.sendMessage({
+  recvID: 'recipient user ID',
+  groupID: '',
+  message,
+}, 'opid')
+  .then(() => {
+    // Message sent successfully ✉️
+  })
+  .catch(err => {
+    // Failed to send message ❌
+    console.log(err);
+  });
+```

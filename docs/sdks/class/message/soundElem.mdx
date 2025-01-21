@@ -10,7 +10,7 @@ toc_max_heading_level: 2
 
 :::info
 
-语音元素
+音频信息。
 
 :::
 
@@ -21,7 +21,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -35,7 +37,7 @@ values={[
 | soundPath | String   | 本地资源地址 |
 | dataSize  | int      | 大小         |
 | duration  | int      | 时长         |
-| sourceUrl | String   | 图片地址     |
+| sourceUrl | String   | 语音远程地址     |
 
 </TabItem>
 
@@ -49,7 +51,7 @@ values={[
 | soundPath | NSString  | 本地资源地址 |
 | dataSize  | NSInteger | 大小         |
 | duration  | NSInteger | 时长         |
-| sourceUrl | CGFloat   | 图片地址     |
+| sourceUrl | CGFloat   | 语音远程地址     |
 
 </TabItem>
 
@@ -63,7 +65,7 @@ values={[
 | soundPath | String   | 本地资源地址 |
 | dataSize  | int      | 大小         |
 | duration  | int      | 时长         |
-| sourceUrl | String   | 图片地址     |
+| sourceUrl | String   | 语音远程地址     |
 
 </TabItem>
 
@@ -77,7 +79,7 @@ values={[
 | soundPath | string   | 本地资源地址 |
 | dataSize  | number   | 大小         |
 | duration  | number   | 时长         |
-| sourceUrl | string   | 图片地址     |
+| sourceUrl | string   | 语音远程地址     |
 
 </TabItem>
 
@@ -91,8 +93,36 @@ values={[
 | soundPath | string   | 本地资源地址 |
 | dataSize  | number   | 大小         |
 | duration  | number   | 时长         |
-| sourceUrl | string   | 图片地址     |
+| sourceUrl | string   | 语音远程地址     |
 
 </TabItem>
 
+<TabItem value="React-Native">
+
+### SoundElem
+
+| 字段名称  | 字段类型 | 描述         |
+| --------- | -------- | ------------ |
+| uuID      | string   | 唯一 ID      |
+| soundPath | string   | 本地资源地址 |
+| dataSize  | number   | 大小         |
+| duration  | number   | 时长         |
+| sourceUrl | string   | 语音远程地址     |
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### SoundBaseInfo
+
+| 字段名称  | 字段类型 | 描述         |
+| --------- | -------- | ------------ |
+| UUID      | string   | 唯一 ID      |
+| SoundPath | string   | 本地资源地址 |
+| DataSize  | int      | 大小         |
+| Duration  | int      | 时长         |
+| SourceUrl | string   | 语音远程地址     |
+| SourceType | string   | 语音类型|
+
+</TabItem>
 </Tabs>

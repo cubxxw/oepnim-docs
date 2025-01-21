@@ -1,4 +1,5 @@
 ---
+sidebar_position: 18
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,14 +10,14 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-翻页获取某个群的群成员信息，按照入群时间过滤
+获取某个群的群成员信息，支持按照入群时间过滤。
 
 :::
 
 :::caution 注意
 
-必须要加入某个群才有权限获取
-
+（1）调用者必须加入此群才可调用；   
+（2）由于是从 APP 本地获取，一次建议最大10000。 
 :::
 
 <Tabs
@@ -26,7 +27,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -41,7 +44,7 @@ values={[
     int count = 0,
     int joinTimeBegin = 0,
     int joinTimeEnd = 0,
-    List<String> excludeUserIDList = const [],
+    List<String> filterUserIDList = const [],
     String? operationID,
   })
 ```
@@ -50,12 +53,12 @@ values={[
 
 | 参数名称          | 参数类型      | 是否必填 | 描述                  |
 | ----------------- | ------------- | -------- | --------------------- |
-| groupID           | String        | 是       | 群 ID                 |
-| offset            | int           | 是       | 开始下标              |
-| count             | int           | 是       | 总数                  |
-| joinTimeBegin     | int           | 是       | 加入开始时间          |
-| joinTimeEnd       | int           | 是       | 加入结束时间          |
-| excludeUserIDList | List<String\> | 否       | 剔除不被查询的成员 id |
+| groupID           | String        | 是       | 群ID                 |
+| offset            | int           | 是       | 起始偏移，分页拉取使用              |
+| count             | int           | 是       | 分页拉取，一页拉取的成员个数                  |
+| joinTimeBegin     | int           | 是       | 最早加入时间，为 0 时不限制          |
+| joinTimeEnd       | int           | 是       | 最晚加入时间，为 0 时不限制          |
+| filterUserIDList | List<String\> | 否       | 需要排除的群成员 userID 列表 |
 
 ### 返回结果
 
@@ -96,18 +99,19 @@ values={[
 
 | 参数名称      | 参数类型  | 是否必填 | 描述         |
 | ------------- | --------- | -------- | ------------ |
-| groupID       | NSString  | 是       | 群 ID        |
-| offset        | NSInteger | 是       | 开始下标     |
-| count         | NSInteger | 是       | 总数         |
-| joinTimeBegin | NSInteger | 是       | 加入开始时间 |
-| joinTimeEnd   | NSInteger | 是       | 加入结束时间 |
+| groupID       | NSString  | 是       | 群ID        |
+| offset        | NSInteger | 是       | 起始偏移，分页拉取使用     |
+| count         | NSInteger | 是       | 分页拉取，一页拉取的成员个数         |
+| joinTimeBegin | NSInteger | 是       | 最早加入时间，为 0 时不限制 |
+| joinTimeEnd   | NSInteger | 是       | 最晚加入时间，为 0 时不限制 |
+| filterUserIDList   | NSArray <NSString *> | 是       | 需要排除的群成员 userID 列表 |
 
 ### 返回结果
 
 | 参数名称  | 参数类型                                                                     | 描述     |
 | --------- | ---------------------------------------------------------------------------- | -------- |
 | onSuccess | NSArray< [OIMGroupMemberInfo](docs/sdks/class/group/groupMemberInfo.mdx) \*> | 成功返回 |
-| onFailure | [OIMFailureCallback](docs/sdks/callback/onError.mdx)                         | 失败返回 |
+| onFailure | OIMFailureCallback                         | 失败返回 |
 
 ### 代码示例
 
@@ -142,12 +146,12 @@ values={[
 | 参数名称          | 参数类型                                                                                                     | 是否必填 | 描述                  |
 | ----------------- | ------------------------------------------------------------------------------------------------------------ | -------- | --------------------- |
 | callBack          | [OnBase](docs/sdks/callback/onBase.mdx)<List<[GroupMembersInfo](docs/sdks/class/group/groupMemberInfo.mdx)>> | 是       | 回调接口              |
-| groupID           | String                                                                                                       | 是       | 群 ID                 |
+| groupID           | String                                                                                                       | 是       | 群ID                 |
 | offset            | int                                                                                                          | 是       | 开始下标              |
 | count             | int                                                                                                          | 是       | 总数                  |
 | joinTimeBegin     | int                                                                                                          | 是       | 加入开始时间          |
 | joinTimeEnd       | int                                                                                                          | 是       | 加入结束时间          |
-| excludeUserIDList | List<String\>                                                                                                | 否       | 剔除不被查询的成员 id |
+| excludeUserIDList | List<String\>                                                                                                | 否       | 剔除不被查询的成员 ID |
 
 ### 返回结果
 
@@ -191,7 +195,7 @@ IMSDK.getGroupMemberListByJoinTimeFilter({
 
 | 参数名称         | 参数类型 | 是否必填 | 描述                         |
 | ---------------- | -------- | -------- | ---------------------------- |
-| groupID          | string   | 是       | 群 ID                        |
+| groupID          | string   | 是       | 群ID                        |
 | offset           | number   | 是       | 起始偏移，分页拉取使用       |
 | count            | number   | 是       | 分页拉取，一页拉取的成员个数 |
 | joinTimeBegin    | number   | 是       | 最早加入时间，为 0 时不限制  |
@@ -208,8 +212,12 @@ IMSDK.getGroupMemberListByJoinTimeFilter({
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
 
 IMSDK.getGroupMemberListByJoinTimeFilter({
   groupID: '',
@@ -251,7 +259,7 @@ IMSDK.asyncApi("getGroupMemberListByJoinTimeFilter",operationID: string;
 | 参数名称         | 参数类型 | 是否必填 | 描述                                                    |
 | ---------------- | -------- | -------- | ------------------------------------------------------- |
 | operationID      | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
-| groupID          | string   | 是       | 群 ID                                                   |
+| groupID          | string   | 是       | 群ID                                                   |
 | offset           | number   | 是       | 起始偏移，分页拉取使用                                  |
 | count            | number   | 是       | 分页拉取，一页拉取的成员个数                            |
 | joinTimeBegin    | number   | 是       | 最早加入时间，为 0 时不限制                             |
@@ -280,12 +288,104 @@ IMSDK.asyncApi('getGroupMemberListByJoinTimeFilter', IMSDK.uuid(), {
   joinTimeEnd: 0,
   filterUserIDList: ['userID'],
 })
-  .then(({ data }) => {
+  .then((data) => {
     // 调用成功
   })
   .catch(({ errCode, errMsg }) => {
     // 调用失败
   });
+```
+
+</TabItem>
+<TabItem value="React-Native">
+
+### 函数原型
+
+```ts showLineNumbers
+OpenIMSDKRN.getGroupMemberListByJoinTimeFilter({
+  groupID: string,
+  offset: number,
+  count: number,
+  joinTimeBegin: number,
+  joinTimeEnd: number,
+  filterUserIDList: string[],
+}, operationID: string): Promise<GroupMemberItem[]>
+```
+
+### 输入参数
+
+| 参数名称         | 参数类型 | 是否必填 | 描述                                                    |
+| ---------------- | -------- | -------- | ------------------------------------------------------- |
+| groupID          | string   | 是       | 群ID                                                   |
+| offset           | number   | 是       | 起始偏移，分页拉取使用                                  |
+| count            | number   | 是       | 分页拉取，一页拉取的成员个数                            |
+| joinTimeBegin    | number   | 是       | 最早加入时间，为 0 时不限制                             |
+| joinTimeEnd      | number   | 是       | 最晚加入时间，为 0 时不限制                             |
+| filterUserIDList | string[] | 是       | 需要排除的群成员 userID 列表                            |
+| operationID      | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                                 | 描述         |
+| --------------- | ------------------------------------------------------------------------ | ------------ |
+| Promise.then()  | Promise<[GroupMemberItem](docs/sdks/class/group/groupMemberInfo.mdx)[]\> | 群成员列表   |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\>                  | 调用失败回调 |
+
+### 代码示例
+
+```js showLineNumbers
+import OpenIMSDKRN from "open-im-sdk-rn";
+
+OpenIMSDKRN.getGroupMemberListByJoinTimeFilter({
+  groupID: '',
+  offset: 0,
+  count: 20,
+  joinTimeBegin: 0,
+  joinTimeEnd: 0,
+  filterUserIDList: ['userID'],
+}, 'operationID')
+  .then((data) => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+
+public static void GetGroupMemberListByJoinTimeFilter(OnBase<List<GroupMember>> cb, string groupId, int offset, int count, long joinTimeBegin, long joinTimeEnd, string[] filterUserIDList)
+
+```
+
+### 输入参数
+
+| 参数名称          | 参数类型                                                                                                     | 是否必填 | 描述                  |
+| ----------------- | ------------------------------------------------------------------------------------------------------------ | -------- | --------------------- |
+| cb | [OnBase](docs/sdks/callback/onBase.mdx)<List<[GroupMember](docs/sdks/class/group/groupMemberInfo.mdx)>> | 是       | 回调接口              |
+| groupId           | string                                                                                                       | 是       | 群ID                 |
+| offset            | int                                                                                                          | 是       | 开始下标              |
+| count             | int                                                                                                          | 是       | 总数                  |
+| joinTimeBegin     | long                                                                                                         | 是       | 加入开始时间          |
+| joinTimeEnd       | long                                                                                                         | 是       | 加入结束时间          |
+| excludeUserIDList | string[]                                                                                                | 否       | 剔除不被查询的成员 ID |
+
+### 返回结果
+
+### 代码示例
+
+```C# showLineNumbers
+
+IMSDK.GetGroupMemberListByJoinTimeFilter((list,errCode,errMsg)=>{
+
+},"groupId",0,0,0,0,{""});
+
 ```
 
 </TabItem>

@@ -1,4 +1,5 @@
 ---
+sidebar_position: 25
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,11 +10,15 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-本地删除一条消息，卸载 APP 后会重新获取到
+从本地删除一条消息，卸载 APP 后会重新获取到。
 
 :::
 
 :::caution 注意
+
+**相关回调**：      
+[onConversationChanged](docs/sdks/callback/onConversationChanged.mdx)   
+如果删除的是最新一条消息，则会话最新一条消息会改变
 
 :::
 
@@ -24,7 +29,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -89,8 +96,8 @@ values={[
 
 | 名称      | 类型                                                   | 描述     |
 | --------- | ------------------------------------------------------ | -------- |
-| onSuccess | [OIMSuccessCallback](docs/sdks/callback/onSuccess.mdx) | 成功返回 |
-| onFailure | [OIMFailureCallback](docs/sdks/callback/onError.mdx)   | 失败返回 |
+| onSuccess | OIMSuccessCallback | 成功返回 |
+| onFailure | OIMFailureCallback   | 失败返回 |
 
 ### 代码示例
 
@@ -170,8 +177,12 @@ IMSDK.deleteMessageFromLocalStorage({
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
 
 IMSDK.deleteMessageFromLocalStorage({
   conversationID: '',
@@ -224,7 +235,51 @@ IMSDK.asyncApi('deleteMessageFromLocalStorage', IMSDK.uuid(), {
   conversationID: '',
   clientMsgID: '',
 })
-  .then(({ data }) => {
+  .then(() => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+</TabItem>
+<TabItem value="React-Native">
+
+### 函数原型
+
+```ts showLineNumbers
+OpenIMSDKRN.deleteMessageFromLocalStorage({
+  conversationID: string,
+  clientMsgID:string
+}, operationID: string): Promise<void>
+```
+
+### 输入参数
+
+| 参数名称       | 参数类型 | 是否必填 | 描述                                                    |
+| -------------- | -------- | -------- | ------------------------------------------------------- |
+| operationID    | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
+| conversationID | string   | 是       | 会话 ID                                                 |
+| clientMsgID    | string   | 是       | 消息 ID                                                 |
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                | 描述         |
+| --------------- | ------------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<void\>                                          | 调用成功回调 |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\> | 调用失败回调 |
+
+### 代码示例
+
+```js showLineNumbers
+import OpenIMSDKRN from "open-im-sdk-rn";
+
+OpenIMSDKRN.deleteMessageFromLocalStorage({
+  conversationID: '',
+  clientMsgID: '',
+}, 'operationID')
+  .then(() => {
     // 调用成功
   })
   .catch(({ errCode, errMsg }) => {
@@ -234,4 +289,31 @@ IMSDK.asyncApi('deleteMessageFromLocalStorage', IMSDK.uuid(), {
 
 </TabItem>
 
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+
+public static void DeleteMessageFromLocalStorage(OnBase<bool> cb, string conversationId, string clientMsgId)
+
+```
+
+### 输入参数
+
+| 参数名称       | 参数类型                                         | 是否必填 | 描述     |
+| -------------- | ------------------------------------------------ | -------- | -------- |
+| cb | [onBase](docs/sdks/callback/onBase.mdx) | 是       | 回调接口 |
+| conversationId | string                                           | 是       | 回话 ID  |
+| clientMsgId    | string                                           | 是       | 消息 ID  |
+
+### 代码示例
+
+```C# showLineNumbers
+IMSDK.DeleteMessageFromLocalStorage((suc,errCode,errMsg)=>{
+
+},conversationId,clientMsgId);
+```
+
+</TabItem>
 </Tabs>

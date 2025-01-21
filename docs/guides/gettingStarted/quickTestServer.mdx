@@ -1,72 +1,73 @@
 ---
 title: '快速验证'
-sidebar_position: 3
+sidebar_position: 7
 ---
 ## 📌 一、部署服务端
 
 请参考 [docker部署](./dockerCompose) 或 [源码部署](./imSourceCodeDeployment) 来进行部署。
 
 ---
+## 二、 开放端口
 
-## 📌 二、开放端口
+### 📡 IM 端口
 
-### 🟢 IM 端口
+| TCP 端口 | 说明 | 操作 ⚙️ |
+| --- | --- | --- |
+| TCP:10001 | ws 协议，消息端口，用于客户端 SDK | 端口放行 |
+| TCP:10002 | api 端口，如用户、好友、群组、消息等接口 | 端口放行 |
+| TCP:10005 | 选择 MinIO 存储时需要（OpenIM 默认使用 MinIO 存储） | 端口放行 |
 
-| TCP 端口  | 说明                                                  | 操作 ⚙️                                      |
-|:--------:|:-----------------------------------------------------:|:--------------------------------------------:|
-| TCP:10001| ws 协议，消息端口，用于客户端 SDK                     | 端口放行或 nginx 反向代理，并关闭防火墙     |
-| TCP:10002| api 端口，如用户、好友、群组、消息等接口              | 端口放行或 nginx 反向代理，并关闭防火墙     |
-| TCP:10005| 选择 minio 存储时需要(openIM 默认使用 minio 存储)     | 端口放行或 nginx 反向代理，并关闭防火墙     |
+###  💬 Chat 端口
 
-### 🟢 Chat 端口
+| TCP 端口 | 说明 | 操作 ⚙️ |
+| --- | --- | --- |
+| TCP:10008 | 业务系统，如注册、登录等 | 端口放行 |
+| TCP:10009 | 管理后台，如统计、封号等 | 端口放行 |
 
-| TCP 端口  | 说明                     | 操作 ⚙️                                      |
-|:--------:|:------------------------:|:--------------------------------------------:|
-| TCP:10008| 业务系统，如注册、登录等 | 端口放行或 nginx 反向代理，并关闭防火墙     |
-| TCP:10009| 管理后台，如统计、封号等 | 端口放行或 nginx 反向代理，并关闭防火墙     |
+###  💻 PC Web 及管理后台前端资源端口
 
-### 🟢 PC Web 端口
+| TCP 端口 | 说明 | 操作 ⚙️ |
+| --- | --- | --- |
+| TCP:11001 | PC Web 前端资源 | 端口放行 |
+| TCP:11002 | 管理后台前端资源 | 端口放行 |
 
-| TCP 端口  | 说明                    | 操作 ⚙️                                      |
-|:--------:|:-----------------------:|:--------------------------------------------:|
-| TCP:11001| `http://ip:11001` 访问 PC Web | 端口放行或 nginx 反向代理，并关闭防火墙 |
+###  💻 grafana端口
+| TCP 端口 | 说明 | 操作 ⚙️ |
+| --- | --- | --- |
+| TCP:13000 | grafana端口 | 端口放行 |
 
----
 
-## 📌 三、PC Web 验证
+
+## 三、验证
+
+### PC Web 验证
 
 :::tip
-在浏览器中输入 `http://ip:11001` 来访问 PC Web。此 ip 为服务端 ip，且确保浏览器能访问。首次使用请通过手机号注册，验证码默认为 `666666`。
+在浏览器中输入 `http://your_server_ip:11001` 来访问 PC Web。`your_server_ip` 为服务端部署机器`ip`地址，确保浏览器能访问。注册时验证码默认为 `666666`。
 :::
+
+
+
 
 import Image3 from './assets/pc-web.png';
 
-<img src={Image3} width="400" alt="PC Web Interface" />
-
----
-
-## 📌 四、App 验证
-
-### 1. 下载官方 App
-扫描以下二维码或点击 [这里](https://www.pgyer.com/OpenIM-Flutter) 进行下载。
-
-<img src="https://www.pgyer.com/app/qrcode/OpenIM-Flutter" width="300" alt="Download App" />
-
-### 2. 修改服务器地址
-
-:::tip
-本应用支持 IP 和域名设置。请确保开放相关端口，并在修改后重启 App。首次使用请通过手机号注册，验证码默认为 `666666`。
-:::
-
-import Image1 from './assets/1688095532548.jpg';
-
-<img src={Image1} width="400" alt="Server Address Modification - Step 1" />
-
-import Image2 from './assets/1688095537589.jpg';
-
-<img src={Image2} width="400" alt="Server Address Modification - Step 2" />
+<img src={Image3} width="700" alt="PC Web Interface" />
 
 
 
+### 管理后台验证
+
+在浏览器中输入 `http://your_server_ip:11002` 来访问管理后台。`your_server_ip` 为服务端部署机器`ip`地址，确保您的浏览器能访问。默认账号和密码均为 chatAdmin
 
 
+import Image4 from './assets/admin.jpg';
+
+<img src={Image4} width="700" alt="admin " />
+
+
+
+### 监控告警验证
+
+在浏览器中输入 `http://your_server_ip:13000` 来访问`grafana`。`your_server_ip` 为服务端部署机器`ip`地址，确保您的浏览器能访问。
+
+具体使用方式可参考 [监控告警部署文档](./admin)。

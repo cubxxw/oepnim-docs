@@ -10,13 +10,13 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-设置会话监听器
+设置会话监听器，包括新会话，会话数据改变等，异步通知到UI层。
 
 :::
 
 :::caution 注意
 
-（1）在 initSDK 之后，login 之前调用；  
+（1）在 initSDK 之后立刻调用；  
 （2）只能调用一次。
 
 :::
@@ -28,7 +28,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -152,4 +154,37 @@ values={[
 
 </TabItem>
 
+<TabItem value="React-Native">
+
+:::caution 注意
+
+登录成功后自动设置，可以直接在客户端使用监听，[会话事件详情参见](docs/sdks/listener/conversationListener.mdx)
+
+:::
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### 函数原型
+
+```C#
+public static void SetConversationListener(IConversationListener l)
+```
+
+### 返回结果
+
+| 参数名称 | 参数类型                                                            | 描述 |
+| -------- | ------------------------------------------------------------------- | ---- | --- |
+| l | [IConversationListener](docs/sdks/listener/conversationListener.mdx) | 是   |     |
+
+### 代码示例
+
+```C# showLineNumbers
+
+IMSDK.SetConversationListener(listener);
+
+```
+
+</TabItem>
 </Tabs>

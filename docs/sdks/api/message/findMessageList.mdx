@@ -1,4 +1,5 @@
 ---
+sidebar_position: 31
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,11 +10,13 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-查找消息列表
+根据消息 ID 查找本地消息。
 
 :::
 
 :::caution 注意
+
+仅支持已经拉取到本地的消息。
 
 :::
 
@@ -24,7 +27,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -41,15 +46,23 @@ values={[
 
 ### 输入参数
 
-| 参数名称     | 参数类型                                                       | 是否必填 | 描述 |
-| ------------ | -------------------------------------------------------------- | -------- | ---- |
-| SearchParams | List<[SearchParams](docs/sdks/class/message/searchParams.mdx)> | 是       |      |
+| 参数名称                     | 参数类型      | 是否必填 | 描述         |
+| ---------------------------- | ------------- | -------- | ------------ |
+| SearchParams.conversationID  | String        | 是       | 会话 ID      |
+| SearchParams.clientMsgIDList | List<String\> | 是       | 消息 ID 列表 |
 
 ### 返回结果
 
-| 名称 | 类型                                                         | 描述     |
-| ---- | ------------------------------------------------------------ | -------- |
-| ~    | [SearchResult](docs/sdks/class/message/searchResultInfo.mdx) | 成功返回 |
+| 名称 | 类型         | 描述     |
+| ---- | ------------ | -------- |
+| ~    | SearchResult | 成功返回 |
+
+#### SearchResult
+
+| 字段名称        | 字段类型                                                                | 描述                          |
+| --------------- | ----------------------------------------------------------------------- | ----------------------------- |
+| totalCount      | int                                                                     | 获取到的总的消息数量          |
+| findResultItems | List<[SearchResultItems](docs/sdks/class/message/searchResultItem.mdx)> | 搜索结果 调用 findXX 方法返回 |
 
 ### 代码示例
 
@@ -81,18 +94,24 @@ values={[
 
 ### 输入参数
 
-| 参数名称              | 参数类型                             | 是否必填 | 描述                                                                 |
-| --------------------- | ------------------------------------ | -------- | -------------------------------------------------------------------- |
-| param                 | NSArray <OIMFindMessageListParam \*> | 是       |                                                                      |
-| param.conversationID  | NSSting                              | 是       | 会话 ID，如果不为空则以会话 ID 获取，否则通过 userID 和 groupID 获取 |
-| param.clientMsgIDList | NSArray <NSString \*>                | 是       | 起始的消息 clientMsgID，第一次拉取为""                               |
+| 参数名称                                | 参数类型              | 是否必填 | 描述                                                                 |
+| --------------------------------------- | --------------------- | -------- | -------------------------------------------------------------------- |
+| OIMFindMessageListParam.conversationID  | NSSting               | 是       | 会话 ID，如果不为空则以会话 ID 获取，否则通过 userID 和 groupID 获取 |
+| OIMFindMessageListParam.clientMsgIDList | NSArray <NSString \*> | 是       | 起始的消息 clientMsgID，第一次拉取为""                               |
 
 ### 返回结果
 
-| 名称      | 类型                                                                | 描述     |
-| --------- | ------------------------------------------------------------------- | -------- |
-| onSuccess | [OIMSearchResultInfo](docs/sdks/class/message/searchResultInfo.mdx) | 成功返回 |
-| onFailure | [OIMFailureCallback](docs/sdks/callback/onError.mdx)                | 失败返回 |
+| 名称      | 类型                | 描述     |
+| --------- | ------------------- | -------- |
+| onSuccess | OIMSearchResultInfo | 成功返回 |
+| onFailure | OIMFailureCallback  | 失败返回 |
+
+#### OIMSearchResultInfo
+
+| 字段名称          | 字段类型                                                                              | 描述                 |
+| ----------------- | ------------------------------------------------------------------------------------- | -------------------- |
+| totalCount        | NSInteger                                                                             | 获取到的总的消息数量 |
+| searchResultItems | NSArray< [OIMSearchResultItemInfo](docs/sdks/class/message/searchResultItem.mdx) \* > | 搜索结果             |
 
 ### 代码示例
 
@@ -123,16 +142,16 @@ param.clientMsgIDList = @[];
 
 ### 输入参数
 
-| 参数名称     | 参数类型                                                                 | 是否必填 | 描述     |
-| ------------ | ------------------------------------------------------------------------ | -------- | -------- |
-| callBack     | OnBase<[TypeKeySetResult](docs/sdks/class/message/searchResultInfo.mdx)> | 是       | 回调接口 |
-| SearchParams | List<[SearchParams](docs/sdks/class/message/searchParams.mdx)>           | 是       |          |
+| 参数名称     | 参数类型                  | 是否必填 | 描述     |
+| ------------ | ------------------------- | -------- | -------- |
+| callBack     | OnBase<TypeKeySetResult\> | 是       | 回调接口 |
+| SearchParams | List<SearchParams\>       | 是       |          |
 
 ### 返回结果
 
-| 名称 | 类型                                                         | 描述     |
-| ---- | ------------------------------------------------------------ | -------- |
-| ~    | [SearchResult](docs/sdks/class/message/searchResultInfo.mdx) | 成功返回 |
+| 名称 | 类型             | 描述     |
+| ---- | ---------------- | -------- |
+| ~    | TypeKeySetResult | 成功返回 |
 
 ### 代码示例
 
@@ -157,11 +176,17 @@ param.clientMsgIDList = @[];
 
 ### 函数原型
 
+> [`SearchMessageResultItem`](docs/sdks/class/message/searchResultItem.mdx)
+
 ```ts showLineNumbers
+type FindMessageResult = {
+  totalCount: number;
+  findResultItems: SearchMessageResultItem[];
+};
 IMSDK.findMessageList({
   conversationID: string;
   clientMsgIDList: string[];
-}, operationID?: string): Promise<WsResponse<SearchMessageResult>>
+}[], operationID?: string): Promise<WsResponse<FindMessageResult>>
 ```
 
 ### 输入参数
@@ -173,21 +198,27 @@ IMSDK.findMessageList({
 
 ### 返回结果
 
-| 参数名称        | 参数类型                                                                                  | 描述         |
-| --------------- | ----------------------------------------------------------------------------------------- | ------------ |
-| Promise.then()  | Promise<WsResponse<[SearchMessageResult](docs/sdks/class/message/searchResultInfo.mdx)>\> | 调用成功回调 |
-| Promise.catch() | Promise<[WsResponse](docs/sdks/class/response.mdx)\>                                      | 调用失败回调 |
+| 参数名称        | 参数类型                                             | 描述         |
+| --------------- | ---------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<WsResponse<FindMessageResult\>>              | 调用成功回调 |
+| Promise.catch() | Promise<[WsResponse](docs/sdks/class/response.mdx)\> | 调用失败回调 |
 
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
 
-IMSDK.findMessageList({
-  conversationID: '',
-  clientMsgIDList: ['msgid'],
-})
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
+
+IMSDK.findMessageList([
+  {
+    conversationID: 'conversation id',
+    clientMsgIDList: ['msgid'],
+  },
+])
   .then(({ data }) => {
     // 调用成功
   })
@@ -202,11 +233,17 @@ IMSDK.findMessageList({
 
 ### 函数原型
 
+> [`SearchMessageResultItem`](docs/sdks/class/message/searchResultItem.mdx)
+
 ```ts showLineNumbers
+type FindMessageResult = {
+  totalCount: number;
+  findResultItems: SearchMessageResultItem[];
+};
 IMSDK.asyncApi('findMessageList', operationID: string, {
 conversationID: string,
 clientMsgIDList: string[]
-}): Promise<SearchMessageResult>
+}): Promise<FindMessageResult>
 ```
 
 ### 输入参数
@@ -221,10 +258,10 @@ clientMsgIDList: string[]
 
 > 通过`openim-uniapp-polyfill`包将函数 Promise 化，调用时需要使用`then`和`catch`判断并处理成功和失败回调。
 
-| 参数名称        | 参数类型                                                                     | 描述         |
-| --------------- | ---------------------------------------------------------------------------- | ------------ |
-| Promise.then()  | Promise<[SearchMessageResult](docs/sdks/class/message/searchResultInfo.mdx)> | 调用成功回调 |
-| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\>                      | 调用失败回调 |
+| 参数名称        | 参数类型                                                | 描述         |
+| --------------- | ------------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<FindMessageResult\>                             | 调用成功回调 |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\> | 调用失败回调 |
 
 ### 代码示例
 
@@ -235,7 +272,56 @@ IMSDK.asyncApi('findMessageList', IMSDK.uuid(), {
   conversationID: '',
   clientMsgIDList: ['msgid'],
 })
-  .then(({ data }) => {
+  .then((data) => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+</TabItem>
+<TabItem value="React-Native">
+
+### 函数原型
+
+> [`SearchMessageResultItem`](docs/sdks/class/message/searchResultItem.mdx)
+
+```ts showLineNumbers
+OpenIMSDKRN.findMessageList({
+  conversationID: string,
+  clientMsgIDList: string[]
+}, operationID: string): Promise<FindMessageResult>
+```
+
+### 输入参数
+
+| 参数名称        | 参数类型 | 是否必填 | 描述                                                    |
+| --------------- | -------- | -------- | ------------------------------------------------------- |
+| conversationID  | string   | 是       | 会话 ID                                                 |
+| clientMsgIDList | string[] | 是       | 消息 ID                                                 |
+| operationID     | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                | 描述         |
+| --------------- | ------------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<FindMessageResult\>                             | 调用成功回调 |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\> | 调用失败回调 |
+
+### 代码示例
+
+```js showLineNumbers
+import OpenIMSDKRN from 'open-im-sdk-rn';
+
+OpenIMSDKRN.findMessageList(
+  {
+    conversationID: '',
+    clientMsgIDList: ['msgid'],
+  },
+  'operationID'
+)
+  .then((data) => {
     // 调用成功
   })
   .catch(({ errCode, errMsg }) => {
@@ -245,4 +331,37 @@ IMSDK.asyncApi('findMessageList', IMSDK.uuid(), {
 
 </TabItem>
 
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+
+public static void FindMessageList(OnBase<FindMessageResult> cb, ConversationArgs[] findMessageOptions)
+
+```
+
+### 输入参数
+
+| 参数名称           | 参数类型                                                           | 是否必填 | 描述     |
+| ------------------ | ------------------------------------------------------------------ | -------- | -------- |
+| cb |  [OnBase](docs/sdks/callback/onBase.mdx)< FindMessageResult>  | 是       | 回调接口                                                                                        |
+| findMessageOptions | [ConversationArgs](docs/sdks/class/message/ConversationArgs.mdx)[] | 是       |          |
+
+### FindMessageResult
+
+| 字段名称          | 字段类型                                                                              | 描述                 |
+| ----------------- | ------------------------------------------------------------------------------------- | -------------------- |
+| TotalCount  | int | 获取到的总的消息数量 |
+| FindResultItems | List< [SearchResultItem](docs/sdks/class/message/searchResultItem.mdx)  > | 搜索结果             |
+
+### 代码示例
+
+```C# showLineNumbers
+IMSDK.FindMessageList((result,errCode,errMsg)=>{
+
+},findMessageOptions);
+```
+
+</TabItem>
 </Tabs>

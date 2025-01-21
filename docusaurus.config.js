@@ -11,7 +11,7 @@ const meta = {
   baseUrl: '/',
   favicon: '/favicon.ico',
   i18n: {
-    defaultLocale: 'zh-Hans',
+    defaultLocale: 'en',
     locales: ['zh-Hans', 'en'],
     localeConfigs: {
       en: {
@@ -33,6 +33,11 @@ const docs = [
     path: 'docs/restapi',
     routeBasePath: '/restapi',
   },
+  {
+    id: 'blog',
+    path: 'docs/blog',
+    routeBasePath: '/blog',
+  }
 ];
 
 /** @type {import('@docusaurus/plugin-content-docs').Options} */
@@ -75,6 +80,9 @@ const plugins = [tailwindPlugin, ...docs_plugins, webpackPlugin];
 const config = {
   ...meta,
   plugins,
+  scripts: [
+    '/embed.js'
+  ],
 
   trailingSlash: false,
   // themes: ['@docusaurus/theme-live-codeblock'],
@@ -103,9 +111,6 @@ const config = {
           filename: 'sitemap.xml',
           ignorePatterns: ['/tags/**'],
         },
-        googleTagManager: {
-          containerId: 'GTM-5FDFFSS',
-        },
       }),
     ],
   ],
@@ -132,24 +137,25 @@ const config = {
         },
         items: [
           {
+            label: 'Guides',
+            to: 'guides/introduction',
+          },
+          {
             label: 'Client SDKs',
             to: 'sdks/introduction',
           },
           {
             label: 'Server APIs',
-            to: 'restapi/introduction',
+            to: 'restapi/apis/introduction',
           },
           {
-            label: 'Guides',
-            to: 'guides/introduction',
+            label: 'Blog',
+            to: 'blog/introduction',
           },
+
+
           {
             type: 'search',
-            position: 'right',
-          },
-          {
-            label: 'v2.x文档',
-            to: 'https://open-im-docs.vercel.app',
             position: 'right',
           },
           {
@@ -177,12 +183,8 @@ const config = {
             title: 'Product',
             items: [
               {
-                label: 'Demo',
-                href: 'https://www.openim.online/demo',
-              },
-              {
-                label: 'Pricing',
-                href: 'https://www.openim.online/price',
+                label: 'Business',
+                href: 'https://openim.io/commercial',
               },
             ],
           },
@@ -191,11 +193,11 @@ const config = {
             items: [
               {
                 label: 'About Us',
-                href: 'https://www.openim.online',
+                href: 'https://openim.io',
               },
               {
                 label: 'Contact Us',
-                href: 'mailto:winxu81@gmail.com',
+                href: 'mailto:service@open-im.com',
               },
             ],
           },
@@ -208,7 +210,7 @@ const config = {
               },
               {
                 label: 'Community',
-                href: 'https://join.slack.com/t/openimsdk/shared_invite/zt-1tmoj26uf-_FDy3dowVHBiGvLk9e5Xkg',
+                href: 'https://join.slack.com/t/openimsdk/shared_invite/zt-2hljfom5u-9ZuzP3NfEKW~BJKbpLm0Hw',
               },
             ],
           },

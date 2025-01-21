@@ -1,4 +1,5 @@
 ---
+sidebar_position: 7
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,11 +10,13 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-创建音频消息
+需要自行存储资源时，通过api上传语音并获取下载地址后创建语音消息。
 
 :::
 
 :::caution 注意
+
+通过该api创建的消息必须通过[sendMessageNotOss](docs/sdks/api/message/sendMessageNotOss.mdx)发送。
 
 :::
 
@@ -24,7 +27,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -126,7 +131,66 @@ Future<Message> createSoundMessageByURL({
 
 <TabItem value="Web">
 
-无
+### 函数原型
+
+```ts showLineNumbers
+IMSDK.createFileMessageByURL({
+  uuid: string;
+  soundPath: string;
+  sourceUrl: string;
+  dataSize: number;
+  duration: number;
+  soundType?: string;
+}, operationID?: string): Promise<WsResponse<MessageItem>>
+```
+
+### 输入参数
+
+| 参数名称  | 参数类型 | 是否必填 | 描述                                                                                                                                    |
+| --------- | -------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| soundPath | string   | 是       | 文件路径，传空字符串即可                                                                                                                |
+| duration  | number   | 是       | 录音时长                                                                                                                                |
+| uuid      | string   | 是       | 文件唯一 ID                                                                                                                             |
+| sourceUrl | string   | 是       | 录音下载地址，自行上文件并通过[sendMessageNotOss](docs/sdks/api/message/sendMessageNotOss.mdx) 发送时，需要传入远程 url，否则为空字符串 |
+| dataSize  | string   | 是       | 文件大小                                                                                                                                |
+| soundType | string   | 是       | 文件类型，一般为后缀名                                                                                                                  |
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                                     | 描述         |
+| --------------- | ---------------------------------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<WsResponse<[MessageItem](docs/sdks/class/message/messageInfo.mdx)>\> | 调用成功回调 |
+| Promise.catch() | Promise<[WsResponse](docs/sdks/class/response.mdx)\>                         | 调用失败回调 |
+
+### 代码示例
+
+```js showLineNumbers
+import { getSDK } from '@openim/wasm-client-sdk';
+const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
+
+// use in mini program
+// import { getSDK } from '@openim/client-sdk';
+// const IMSDK = getSDK();
+
+IMSDK.createFileMessageByURL({
+  soundPath: '',
+  duration: 6,
+  uuid: 'uuid',
+  sourceUrl: '',
+  dataSize: 1024,
+  soundType: 'mp3',
+})
+  .then(({ data }) => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
 
 </TabItem>
 
@@ -152,7 +216,7 @@ IMSDK.asyncApi('createSoundMessageByURL', operationID: string, {
 | operationID | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数                                                                                 |
 | soundPath   | string   | 是       | 文件路径，传空字符串即可                                                                                                                |
 | duration    | number   | 是       | 录音时长                                                                                                                                |
-| uuid        | string   | 是       | 文件唯一 id                                                                                                                             |
+| uuid        | string   | 是       | 文件唯一 ID                                                                                                                             |
 | sourceUrl   | string   | 是       | 图片下载地址，自行上文件并通过[sendMessageNotOss](docs/sdks/api/message/sendMessageNotOss.mdx) 发送时，需要传入远程 url，否则为空字符串 |
 | dataSize    | string   | 是       | 文件大小                                                                                                                                |
 | soundType   | string   | 是       | 文件类型，一般为后缀名                                                                                                                  |
@@ -179,12 +243,102 @@ IMSDK.asyncApi('createSoundMessageByURL', IMSDK.uuid(), {
   dataSize: 1024,
   soundType: 'mp3',
 })
-  .then(({ data }) => {
+  .then((data) => {
     // 调用成功
   })
   .catch(({ errCode, errMsg }) => {
     // 调用失败
   });
+```
+
+</TabItem>
+<TabItem value="React-Native">
+
+### 函数原型
+
+```ts showLineNumbers
+OpenIMSDKRN.createSoundMessageByURL({
+  uuid: string,
+  soundPath: string,
+  sourceUrl: string,
+  dataSize: number,
+  duration: number,
+  soundType: string,
+}, operationID: string): Promise<MessageItem>
+```
+
+### 输入参数
+
+| 参数名称    | 参数类型 | 是否必填 | 描述                                                                                                                                    |
+| ----------- | -------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------- |                                                                      |
+| soundPath   | string   | 是       | 文件路径，传空字符串即可                                                                                                                |
+| duration    | number   | 是       | 录音时长                                                                                                                                |
+| uuid        | string   | 是       | 文件唯一 ID                                                                                                                             |
+| sourceUrl   | string   | 是       | 图片下载地址，自行上文件并通过[sendMessageNotOss](docs/sdks/api/message/sendMessageNotOss.mdx) 发送时，需要传入远程 url，否则为空字符串 |
+| dataSize    | string   | 是       | 文件大小                                                                                                                                |
+| soundType   | string   | 是       | 文件类型，一般为后缀名                                                                                                                  |
+| operationID | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数   
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                         | 描述         |
+| --------------- | ---------------------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<[MessageItem](docs/sdks/class/message/messageInfo.mdx)\> | 调用成功回调 |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\>          | 调用失败回调 |
+
+### 代码示例
+
+```js showLineNumbers
+import OpenIMSDKRN from "open-im-sdk-rn";
+
+OpenIMSDKRN.createSoundMessageByURL({
+  soundPath: '',
+  duration: 6,
+  uuid: 'uuid',
+  sourceUrl: '',
+  dataSize: 1024,
+  soundType: 'mp3',
+}, 'operationID')
+  .then((data) => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+
+public static Message CreateSoundMessageByURL(SoundElem soundBaseInfo);
+
+```
+
+### 输入参数
+
+| 参数名称 | 参数类型  | 是否必填 | 描述     |
+| -------- | --------- | -------- | -------- |
+| soundBaseInfo |[SoundElem](docs/sdks/class/message/soundElem.mdx) | 是       | 音频配置 |
+
+### 返回结果
+
+| 名称    | 类型                                                      | 描述     |
+| ------- | --------------------------------------------------------- | -------- |
+| message | [Message](docs/sdks/class/message/messageInfo.mdx) | 成功返回 |
+
+### 代码示例
+
+```C# showLineNumbers
+
+var msg = IMSDK.CreateSoundMessageByURL(new SoundElem(){
+    
+});
+
 ```
 
 </TabItem>

@@ -1,4 +1,5 @@
 ---
+sidebar_position: 11.3
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,18 +10,20 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-创建文件消息
+根据文件对象创建文件消息。
 
 :::
 
 :::caution 注意
-仅 web 端支持，且最好不要用于大文件上传
+
+仅 web 端支持，且最好不要用于大文件上传，大于1G的文件上传，建议使用[createFileMessageByURL](docs/sdks/api/message/createFileMessageByURL.mdx)接口。
+
 :::
 
 <Tabs
 groupId="sdks-language"
 values={[
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
 ]
 }>
 
@@ -46,9 +49,9 @@ IMSDK.createFileMessageByFile({
 | --------- | -------- | -------- | -------------------------------------- |
 | filePath  | string   | 是       | 文件绝对路径，如果没有，传空字符串即可 |
 | fileName  | string   | 是       | 文件名称                               |
-| uuid      | string   | 是       | 文件唯一 id                            |
+| uuid      | string   | 是       | 文件唯一 ID                            |
 | sourceUrl | string   | 是       | 空字符串即可                           |
-| fileSize  | string   | 是       | 文件大小                               |
+| fileSize  | number   | 是       | 文件大小                               |
 | fileType  | string   | 是       | 文件类型                               |
 | file      | File     | 是       | 文件对象                               |
 
@@ -62,8 +65,16 @@ IMSDK.createFileMessageByFile({
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
+
+// use in mini program
+// import { getSDK } from '@openim/client-sdk';
+// const IMSDK = getSDK();
 
 IMSDK.createFileMessageByFile({
   filePath: videoFile.path || '',

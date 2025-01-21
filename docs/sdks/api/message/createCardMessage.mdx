@@ -1,4 +1,5 @@
 ---
+sidebar_position: 16
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -9,13 +10,11 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-创建名片消息
+创建名片消息。
 
 :::
 
-:::caution 注意
 
-:::
 
 <Tabs
 groupId="sdks-language"
@@ -24,7 +23,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -48,7 +49,7 @@ values={[
 | -------- | -------- | -------- | -------- |
 | userID   | String   | 是       | 用户 ID  |
 | nickname | String   | 是       | 用户昵称 |
-| faceURL  | String   | 是       | 用户头像 |
+| faceURL  | String   | 是       | 用户头像URL |
 | ex       | String   | 是       | 扩展信息 |
 
 ### 返回结果
@@ -114,7 +115,7 @@ public Message createCardMessage(CardElem cardElem)
 | -------- | -------- | -------- | -------- |
 | userID   | String   | 是       | 用户 ID  |
 | nickname | String   | 是       | 用户昵称 |
-| faceURL  | String   | 是       | 用户头像 |
+| faceURL  | String   | 是       | 用户头像URL |
 | ex       | String   | 是       | 扩展信息 |
 
 ### 返回结果
@@ -150,7 +151,7 @@ IMSDK.createCardMessage({
 | -------- | -------- | -------- | -------- |
 | userID   | String   | 是       | 用户 ID  |
 | nickname | String   | 是       | 用户昵称 |
-| faceURL  | String   | 是       | 用户头像 |
+| faceURL  | String   | 是       | 用户头像URL |
 | ex       | String   | 是       | 扩展信息 |
 
 ### 返回结果
@@ -163,8 +164,16 @@ IMSDK.createCardMessage({
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
+
+// use in mini program
+// import { getSDK } from '@openim/client-sdk';
+// const IMSDK = getSDK();
 
 IMSDK.createCardMessage({
   userID: '',
@@ -202,7 +211,7 @@ IMSDK.asyncApi('createCardMessage', operationID: string, {
 | operationID | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
 | userID      | String   | 是       | 用户 ID                                                 |
 | nickname    | String   | 是       | 用户昵称                                                |
-| faceURL     | String   | 是       | 用户头像                                                |
+| faceURL     | String   | 是       | 用户头像URL                                                |
 | ex          | String   | 是       | 扩展信息                                                |
 
 ### 返回结果
@@ -225,12 +234,92 @@ IMSDK.asyncApi('createCardMessage', IMSDK.uuid(), {
   faceURL: '',
   ex: '',
 })
-  .then(({ data }) => {
+  .then((data) => {
     // 调用成功
   })
   .catch(({ errCode, errMsg }) => {
     // 调用失败
   });
+```
+
+</TabItem>
+<TabItem value="React-Native">
+  
+### 函数原型
+
+```ts showLineNumbers
+OpenIMSDKRN.login({
+  userID:string,
+  nickname:string,
+  faceURL:string,
+  ex:string
+}, operationID:string): Promise<MessageItem>
+```
+
+### 输入参数
+
+| 参数名称    | 参数类型 | 是否必填 | 描述                                                    |
+| ----------- | -------- | -------- | ------------------------------------------------------- |
+| userID      | string   | 是       | 用户 ID                                                 |
+| nickname    | string   | 是       | 用户昵称                                                |
+| faceURL     | string   | 是       | 用户头像URL                                                |
+| ex          | string   | 是       | 扩展信息                                                |
+| operationID | string   | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                         | 描述         |
+| --------------- | ---------------------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<[MessageItem](docs/sdks/class/message/messageInfo.mdx)\> | 调用成功回调 |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\>          | 调用失败回调 |
+
+### 代码示例
+```js showLineNumbers
+import OpenIMSDKRN from "open-im-sdk-rn";
+
+OpenIMSDKRN.createCardMessage({
+  userID: '',
+  nickname: '',
+  faceURL: '',
+  ex: '',
+}, 'operationID')
+  .then((data) => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+public static Message CreateCardMessage(CardElem cardInfo)
+```
+
+### 输入参数
+
+| 参数名称 | 参数类型 | 是否必填 | 描述     |
+| -------- | -------- | -------- | -------- |
+| cardInfo      | [CardElem](docs/sdks/class/message/cardElem.mdx)| 是       | 卡片内容 |
+
+### 返回结果
+
+| 名称 | 类型                                               | 描述     |
+| ---- | -------------------------------------------------- | -------- |
+| ~    | [Message](docs/sdks/class/message/messageInfo.mdx) | 成功返回 |
+
+### 代码示例
+
+```C# showLineNumbers
+var msg = IMSDK.CreateCardMessage(new CardElem(){
+
+});
 ```
 
 </TabItem>

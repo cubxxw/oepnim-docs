@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 toc_min_heading_level: 2
 toc_max_heading_level: 2
 ---
@@ -10,13 +10,18 @@ toc_max_heading_level: 2
 
 :::info 说明
 
-登录用户修改自己的头像、昵称等 IM 中的资料
+修改当前登录用户的个人信息。包含Ex字段。   
 
 :::
 
 :::caution 注意
 
-当修改成功后，本终端以及其他终端会收到 onSelfInfoUpdated 回调，UI 此时需刷新以展示最新资料
+
+
+
+**相关回调**:    
+[onSelfInfoUpdated](docs/sdks/callback/onSelfUserInfoUpdate.mdx)  
+
 
 :::
 
@@ -27,7 +32,9 @@ values={[
 { label: 'Android', value: 'Android', },
 { label: 'Flutter', value: 'Flutter', },
 { label: 'uni-app', value: 'uni-app', },
-{ label: 'Web', value: 'Web', },
+{ label: 'Browser/Electron/MiniProgram', value: 'Web', },
+{ label: 'React-Native', value: 'React-Native', },
+{ label: 'Unity', value: 'Unity', },
 ]
 }>
 
@@ -39,11 +46,7 @@ values={[
   Future<String?> setSelfInfo({
     String? nickname,
     String? faceURL,
-    int? gender,
-    int? appMangerLevel,
-    String? phoneNumber,
-    int? birth,
-    String? email,
+    int? globalRecvMsgOpt,
     String? ex,
     String? operationID,
   })
@@ -54,12 +57,8 @@ values={[
 | 参数名称       | 参数类型 | 是否必填 | 描述           |
 | -------------- | -------- | -------- | -------------- |
 | nickname       | String?  | 否       | 用户昵称       |
-| faceURL        | String?  | 否       | 用户头像       |
-| gender         | int?     | 否       | 性别 1、男     |
-| appMangerLevel | int?     | 否       | ~              |
-| phoneNumber    | String?  | 否       | 手机号         |
-| birth          | int?     | 否       | 出生日期（ms） |
-| email          | String?  | 否       | 邮箱           |
+| faceURL        | String?  | 否       | 用户头像URL       |
+| globalRecvMsgOpt | int?     | 否       | 全局接收离线推送设置              |
 | ex             | String?  | 否       | 扩展信息       |
 
 ### 返回结果
@@ -101,8 +100,8 @@ values={[
 
 | 参数名称  | 参数类型                                               | 描述     |
 | --------- | ------------------------------------------------------ | -------- |
-| onSuccess | [OIMSuccessCallback](docs/sdks/callback/onSuccess.mdx) | 成功返回 |
-| onFailure | [OIMFailureCallback](docs/sdks/callback/onError.mdx)   | 失败返回 |
+| onSuccess | OIMSuccessCallback | 成功返回 |
+| onFailure | OIMFailureCallback   | 失败返回 |
 
 ### 代码示例
 
@@ -110,7 +109,6 @@ values={[
 
 OIMUserInfo *info = [OIMUserInfo new];
 info.nickname = @"";
-info.email = @"";
 info.faceURL = @"";
 
 [OIMManager.manager setSelfInfo:info
@@ -127,24 +125,20 @@ info.faceURL = @"";
 ### 函数原型
 
 ```java showLineNumbers
-
- public void setSelfInfo(OnBase<String> callBack, String nickname, String faceURL, int gender, int appMangerLevel, String phoneNumber, long birth, String email, String ex)
-
+ public void setSelfInfo(OnBase<String> base, UserInfoReq userInfoReq)
 ```
 
 ### 输入参数
 
-| 参数名称       | 参数类型                                | 是否必填 | 描述                           |
-| -------------- | --------------------------------------- | -------- | ------------------------------ |
-| callBack       | [OnBase](docs/sdks/callback/onBase.mdx) | 是       | 回调接口                       |
-| nickname       | String                                  | 是       | 名字                           |
-| faceURL        | String                                  | 是       | 头像                           |
-| gender         | int                                     | 是       | 性别 1：男 2：女               |
-| appMangerLevel | int                                     | 是       | 用户角色 1：普通用户 2：管理员 |
-| phoneNumber    | String                                  | 否       | 手机号                         |
-| birth          | long                                    | 否       | 出生日期                       |
-| email          | String                                  | 否       | 邮箱                           |
-| ex             | String                                  | 否       | 扩展字段                       |
+请求结构体UserInfoReq属性如下所示：
+
+| 参数名称       | 参数类型 | 是否必填 | 描述           |
+| -------------- | -------- | -------- | -------------- |
+| userID       | String  | 是       | 用户id       |
+| nickname        | String  | 否       | 用户昵称       |
+| faceURL | String     | 否       | 用户头像              |
+| ex             | String  | 否       | 扩展参数       |
+| globalRecvMsgOpt             | Integer  | 否       | 全局免打扰，1:屏蔽消息; 2:接收消息但不提示; 0:正常       |
 
 ### 返回结果
 
@@ -152,7 +146,16 @@ info.faceURL = @"";
 
 ```java showLineNumbers
 
-OpenIMClient.getInstance().userInfoManager.setSelfInfo(new OnBase<String>(){…},...);
+OpenIMClient.getInstance().userInfoManager.setSelfInfo(new OnBase<String>(){
+    @Override
+    public void onError(int code, String error) {
+      // todo: 处理错误信息
+    }
+    @Override
+    public void onSuccess(String data) {
+      // todo: 请求成功
+    }
+},userInfoReq);
 
 ```
 
@@ -182,8 +185,16 @@ IMSDK.setSelfInfo(userInfo: Partial<Omit<SelfUserInfo, 'userID'>>, operationID?:
 ### 代码示例
 
 ```js showLineNumbers
-import { getSDK } from 'open-im-sdk-wasm';
+import { getSDK } from '@openim/wasm-client-sdk';
 const IMSDK = getSDK();
+
+// use in electron with ffi
+// import { getWithRenderProcess } from '@openim/electron-client-sdk/lib/render';
+// const { instance: IMSDK } = getWithRenderProcess();
+
+// use in mini program
+// import { getSDK } from '@openim/client-sdk';
+// const IMSDK = getSDK();
 
 const userInfo = {
   nickname: '', // 要修改的昵称，选填
@@ -245,5 +256,81 @@ IMSDK.asyncApi('setSelfInfo', IMSDK.uuid(), userInfo)
 ```
 
 </TabItem>
+<TabItem value="React-Native">
 
+### 函数原型
+
+```ts showLineNumbers
+OpenIMSDKRN.setSelfInfo(
+  userInfo: Partial<Omit<SelfUserInfo, 'userID'>>,
+  operationID: string
+): Promise<void>
+```
+
+### 输入参数
+
+| 参数名称    | 参数类型                                                                   | 是否必填 | 描述                                                    |
+| ----------- | -------------------------------------------------------------------------- | -------- | ------------------------------------------------------- |
+| userInfo    | Partial<Omit<[SelfUserInfo](docs/sdks/class/user/userInfo.mdx), 'userID'>> | 是       | 个人信息                                                |
+| operationID | string                                                                     | 是       | 操作 ID，用于定位问题，保持唯一，建议用当前时间和随机数 |
+
+### 返回结果
+
+| 参数名称        | 参数类型                                                | 描述         |
+| --------------- | ------------------------------------------------------- | ------------ |
+| Promise.then()  | Promise<void\>                                          | 调用成功回调 |
+| Promise.catch() | Promise<[CatchResponse](docs/sdks/class/response.mdx)\> | 调用失败回调 |
+
+### 代码示例
+
+```js showLineNumbers
+import OpenIMSDKRN from "open-im-sdk-rn";
+
+const userInfo = {
+  nickname: '', // 要修改的昵称，选填
+  faceURL: '', // 要修改的头像，选填
+  ex: '', // 要修改的扩展字段内容，选填
+};
+
+OpenIMSDKRN.setSelfInfo(userInfo, 'operationID');
+  .then(() => {
+    // 调用成功
+  })
+  .catch(({ errCode, errMsg }) => {
+    // 调用失败
+  });
+```
+
+</TabItem>
+
+<TabItem value="Unity">
+
+### 函数原型
+
+```C# showLineNumbers
+
+public static void SetSelfInfo(onBase<bool> cb, UserInfo userInfo)
+
+```
+
+### 输入参数
+
+| 参数名称       | 参数类型                                | 是否必填 | 描述                           |
+| -------------- | --------------------------------------- | -------- | ------------------------------ |
+| cb | [OnBase](docs/sdks/callback/onBase.mdx) | 是       | 回调                       |
+| userInfo | [UserInfo](docs/sdks/class/user/userInfo.mdx) | 是       | 名字                           |
+
+### 返回结果
+
+### 代码示例
+
+```C# showLineNumbers
+
+IMSDK.SetSelfInfo((suc,errCode,errMsg)=>{
+
+},userInfo);
+
+```
+
+</TabItem>
 </Tabs>
