@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkopenim_docs=self.webpackChunkopenim_docs||[]).push([[5570],{88929:s=>{s.exports=JSON.parse('{"name":"docusaurus-plugin-content-docs","id":"restapi"}')}}]);
